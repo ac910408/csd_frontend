@@ -1,14 +1,3 @@
 <template>
-  <div>
-    <h1>Jelou maifren</h1>
-  </div>
+  <TestComponent />
 </template>
-
-<script>
-export default {
-  name: 'IndexComponent',
-  data() {
-    return {}
-  },
-}
-</script>
