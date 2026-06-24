@@ -13,10 +13,9 @@
 | Vue 3 | 3.5+ | Framework SFC con Composition API + `<script setup>` |
 | Vue Router | 5.x | File-based routing |
 | Pinia | 2+ | Estado global y stores |
-| Lucide Vue Next | — | Iconos SVG |
+| @lucide/vue | — | Iconos SVG |
 | ApexCharts Vue | — | Gráficas para reportes (barras, radar, linea) |
 | unplugin-vue-components | — | Auto-import de componentes |
-| unplugin-auto-import | — | Auto-import de composables, `ref`, `computed`, etc. |
 
 > **Manejador de paquetes:** `pnpm` — usar `pnpm add`, `pnpm remove`, `pnpm dlx` en lugar de npm.
 
@@ -24,7 +23,7 @@
 
 ## 🧱 Orden de codificación
 
-1. **Instalación y configuración del stack:** Vite + Vue 3 + TS + Tailwind v4 + auto-imports + Pinia + Router
+1. **Instalación y configuración del stack:** Vite + Vue 3 + Tailwind v4 + unplugin-vue-components + Pinia + Router
 2. **Diseño de layouts** — `AuthLayout`, `DashboardLayout`, `EmptyLayout` (organismos + templates primero)
 3. **Componentes atómicos y moleculares** — BaseButton, BaseInput, BaseModal, FormField, CatalogoAutocomplete, etc.
 4. **Composables globales** — `useApi`, `useAuth`, `useTheme`, validators
@@ -40,8 +39,8 @@ Cada archivo `.vue` debe seguir el orden:
   <!-- 1. Template primero -->
 </template>
 
-<script setup lang="ts">
-// 2. Script despuÃ©s (siempre TypeScript + Composition API)
+<script setup>
+// 2. Script después (siempre Composition API)
 </script>
 
 <style scoped>
@@ -75,7 +74,6 @@ Nivel           Importa desde                  Propósito
 ```
 src/
 ├── assets/                       # Imágenes, fuentes
-├── auto-imports.d.ts             # Generado por unplugin-auto-import
 ├── components.d.ts               # Generado por unplugin-vue-components
 ├── composables/                  # Lógica reusable (useAuth, useApi)
 ├── components/
@@ -113,16 +111,12 @@ src/
 ├── router/
 │   └── index.ts                  # DefiniciÃ³n de rutas
 ├── services/
-│   └── api.ts                    # Cliente HTTP con fetch nativo + interceptores
+│   └── api.js                    # Cliente HTTP con fetch nativo + interceptores
 ├── stores/
-│   ├── auth.store.ts             # Autenticación JWT
-│   ├── user.store.ts             # Perfil y roles activos
-│   ├── organization.store.ts     # Provincia, grupo, sección activos
-│   └── ui.store.ts               # Sidebar, modales, toasts
-├── types/
-│   ├── api.ts                    # Interfaces de respuesta del backend
-│   ├── models.ts                 # Interfaces de dominio
-│   └── enums.ts                  # Constantes y enums
+│   ├── auth.store.js             # Autenticación JWT
+│   ├── user.store.js             # Perfil y roles activos
+│   ├── organization.store.js     # Provincia, grupo, sección activos
+│   └── ui.store.js               # Sidebar, modales, toasts
 ├── utils/
 │   ├── format.ts                 # Formateo de fechas, monedas, CUM
 │   └── validators.ts             # Validaciones de formulario
@@ -141,7 +135,7 @@ src/
 │   ├── secciones/
 │   ├── admin/
 │   └── ...
-├── main.ts
+├── main.js
 ├── App.vue
 └── style.css                     # Tailwind directives
 ```
@@ -545,30 +539,24 @@ Para todos los catálogos (sean expandibles o no) se debe usar un **Autocomplete
 
 **Props del componente `CatalogoAutocomplete`:**
 
-```ts
-interface CatalogoAutocompleteProps {
-  /** Nombre del catálogo (ej: 'cat_religion', 'cat_alergeno') */
-  catalogo: string
-  /** Array de items a mostrar en el dropdown */
-  items: Array<{ id: number; nombre: string }>
-  /** v-model del ID seleccionado */
-  modelValue: number | null
-  /** Si true, muestra la opción de sugerir nuevo */
-  expandible?: boolean
-  /** Tabla destino para la sugerencia (obligatorio si expandible=true) */
-  tablaDestino?: string
-  /** Label del campo */
-  label?: string
-  /** Placeholder del input */
-  placeholder?: string
-  /** Si true muestra error styling */
-  error?: string
-  /** Deshabilitado */
-  disabled?: boolean
-}
+**Props del componente `CatalogoAutocomplete` (JSDoc):**
+
+```js
+/**
+ * @typedef {Object} CatalogoAutocompleteProps
+ * @property {string} catalogo - Nombre del catálogo (ej: 'cat_alergeno')
+ * @property {Array<{id: number, nombre: string}>} items - Items del dropdown
+ * @property {number|null} modelValue - v-model del ID seleccionado
+ * @property {boolean} [expandible] - Muestra opción de sugerir nuevo
+ * @property {string} [tablaDestino] - Tabla destino para sugerencia (req si expandible)
+ * @property {string} [label] - Label del campo
+ * @property {string} [placeholder] - Placeholder del input
+ * @property {string} [error] - Muestra error styling
+ * @property {boolean} [disabled] - Deshabilitado
+ */
 ```
 
-**Ejemplo de uso (recordar: NO requiere import):**
+**Ejemplo de uso:**
 
 ```vue
 <template>
@@ -583,16 +571,16 @@ interface CatalogoAutocompleteProps {
   />
 </template>
 
-<script setup lang="ts">
-// ⚠️ No importar CatalogoAutocomplete ni ref
-// unplugin-vue-components los auto-importa por estar en components/molecules/
+<script setup>
+import { ref, onMounted } from 'vue'
+import { api } from '@/services/api'
 
-const alergenos = ref<Array<{ id: number; nombre: string }>>([])
-const alergenoId = ref<number | null>(null)
+const alergenos = ref([])
+const alergenoId = ref(null)
 
 onMounted(async () => {
   const res = await api.get('/catalogos/alergenos')
-  alergenos.value = res.data.data
+  alergenos.value = res.data
 })
 </script>
 ```
@@ -662,17 +650,17 @@ onMounted(async () => {
 
 ### Manejo de errores (fetch con interceptores)
 
-Usar **fetch nativo** (no axios) con un wrapper centralizado en `services/api.ts` que implementa interceptores de forma manual:
+Usar **fetch nativo** (no axios) con un wrapper centralizado en `services/api.js` que implementa interceptores de forma manual:
 
-```ts
-// services/api.ts — se auto-importa, NO escribir import
+```js
+// services/api.js
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080'
 
-async function request<T>(method: string, path: string, body?: unknown): Promise<T> {
+async function request(method, path, body) {
   const token = localStorage.getItem('csd-token')
   
-  const headers: Record<string, string> = {
+  const headers = {
     'Content-Type': 'application/json',
   }
   if (token) headers['Authorization'] = `Bearer ${token}`
@@ -697,20 +685,20 @@ async function request<T>(method: string, path: string, body?: unknown): Promise
     throw err
   }
 
-  return json as T
+  return json
 }
 
 export const api = {
-  get: <T>(path: string) => request<T>('GET', path),
-  post: <T>(path: string, body?: unknown) => request<T>('POST', path, body),
-  put: <T>(path: string, body?: unknown) => request<T>('PUT', path, body),
-  del: <T>(path: string) => request<T>('DELETE', path),
+  get: (path) => request('GET', path),
+  post: (path, body) => request('POST', path, body),
+  put: (path, body) => request('PUT', path, body),
+  del: (path) => request('DELETE', path),
 }
 ```
 
-**Uso en vistas (sin import):**
-```ts
-const res = await api.get<DataResponse<Perfil>>('/perfil')
+**Uso en vistas:**
+```js
+const res = await api.get('/perfil')
 perfil.value = res.data
 ```
 
@@ -850,7 +838,7 @@ watch(form, async () => {
 ### Protección de rutas
 
 Usar `beforeEach` en el router:
-```ts
+```js
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
     next('/login')
@@ -862,33 +850,35 @@ router.beforeEach((to, from, next) => {
 })
 ```
 
-### Uso de auto-imports
+### Imports y auto-imports
 
-### ⚠️ Regla de oro: NO importes nada manualmente
+### ⚠️ Regla de oro: solo importar manualmente stores, servicios y Vue API
 
-Gracias a `unplugin-auto-import` y `unplugin-vue-components`, **no se escribe NINGÚN `import`** en los componentes. El plugin resuelve automáticamente:
+`unplugin-vue-components` auto-importa **componentes** — no escribir `import` para ningún componente Vue.
 
-| Categoría | Se auto-importa | Ejemplo en template/script |
-|-----------|----------------|---------------------------|
-| APIs de Vue | `ref`, `computed`, `watch`, `onMounted`, `onUnmounted`, `nextTick`, `reactive`, `toRef`, etc. | `const count = ref(0)` |
-| APIs de Router | `useRouter`, `useRoute` | `const router = useRouter()` |
-| APIs de Pinia | `defineStore`, `storeToRefs`, `acceptHMRUpdate` | `const store = useAuthStore()` |
-| Stores propias | `useAuthStore`, `useUserStore`, `useOrganizationStore`, `useUiStore` | `const auth = useAuthStore()` |
-| Composables propios | `useApi`, `useAuth`, `useTheme`, `useForm` | `const { get } = useApi()` |
-| Componentes atómicos | `BaseButton`, `BaseInput`, `BaseBadge`, `BaseModal`, `BaseCard`, `BaseIcon`, `BaseSpinner`, `BaseTable`, `BaseAvatar` | `<BaseButton>Enviar</BaseButton>` |
-| Componentes moleculares | `FormField`, `SearchBar`, `PaginationBar`, `ConfirmDialog`, `AlertMessage`, `EmptyState`, `FilterChips`, `CatalogoAutocomplete` | `<CatalogoAutocomplete … />` |
-| Componentes organismo | `AppHeader`, `AppSidebar`, `ProfileCard`, `HealthSection`, `ProgressionMap`, `DataTableView`, `ActivityTimeline`, `CouncilMinuteForm` | `<AppSidebar />` |
-| Layouts | `AuthLayout`, `DashboardLayout`, `EmptyLayout` | `<DashboardLayout>...</DashboardLayout>` |
-| Iconos Lucide | Todos los iconos como componente PascalCase | `<LucideUser />`, `<LucideMoon />`, `<LucideSun />` |
+Vue API (`ref`, `computed`, `watch`, `onMounted`, etc.) se importan manualmente desde `vue`.
+Router API (`useRouter`, `useRoute`) se importan desde `vue-router`.
+Pinia (`defineStore`, `storeToRefs`) se importan desde `pinia`.
 
-**Ejemplo concreto — un componente completo sin imports:**
+| Categoría | Cómo se usa | Ejemplo |
+|-----------|-------------|---------|
+| Componentes | **Auto-import** por `unplugin-vue-components` | `<BaseButton>Enviar</BaseButton>` |
+| APIs de Vue | `import { ref, computed } from 'vue'` | `const count = ref(0)` |
+| APIs de Router | `import { useRouter, useRoute } from 'vue-router'` | `const router = useRouter()` |
+| APIs de Pinia | `import { defineStore } from 'pinia'` | `const auth = useAuthStore()` |
+| Stores propias | `import { useAuthStore } from '@/stores/auth.store'` | `const auth = useAuthStore()` |
+| Composables propios | `import { useTheme } from '@/composables/useTheme'` | `const theme = useTheme()` |
+| Servicios | `import { api } from '@/services/api'` | `const res = await api.get(...)` |
+| Iconos Lucide | Se importan manualmente de `@lucide/vue` | `import { Search, Moon, Sun } from '@lucide/vue'` |
+
+**Ejemplo concreto — un componente completo:**
 
 ```vue
 <template>
   <div class="p-4">
     <BaseInput v-model="busqueda" placeholder="Buscar…" />
     <BaseButton @click="cargar">
-      <LucideSearch class="w-4 h-4" />
+      <Search class="w-4 h-4" />
       Buscar
     </BaseButton>
     <AlertMessage v-if="error" type="error" :mensaje="error" />
@@ -897,9 +887,12 @@ Gracias a `unplugin-auto-import` y `unplugin-vue-components`, **no se escribe NI
   </div>
 </template>
 
-<script setup lang="ts">
-// ⚠️ Sin imports: ref, onMounted, useApi, BaseInput, BaseButton,
-//    LucideSearch, AlertMessage, BaseSpinner, BaseTable se auto-importan
+<script setup>
+import { ref } from 'vue'
+import { Search } from '@lucide/vue'
+import { api } from '@/services/api'
+// Componentes BaseInput, BaseButton, AlertMessage, BaseSpinner, BaseTable
+// se auto-importan por unplugin-vue-components
 
 const busqueda = ref('')
 const cargando = ref(false)
@@ -911,9 +904,9 @@ async function cargar() {
   error.value = ''
   try {
     const res = await api.get('/catalogos/...')
-    resultados.value = res.data.data
-  } catch (e: any) {
-    error.value = e.response?.data?.error?.mensaje || 'Error al cargar'
+    resultados.value = res.data
+  } catch (e) {
+    error.value = e?.mensaje || 'Error al cargar'
   } finally {
     cargando.value = false
   }
@@ -921,23 +914,17 @@ async function cargar() {
 </script>
 ```
 
-### Configuración recomendada de `vite.config.ts`
+### Configuración recomendada de `vite.config.js`
 
-```ts
+```js
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
-import { resolve } from 'path'
+import { fileURLToPath, URL } from 'node:url'
 
 export default defineConfig({
   plugins: [
     vue(),
-    AutoImport({
-      imports: ['vue', 'vue-router', { pinia: ['defineStore', 'storeToRefs', 'acceptHMRUpdate'] }],
-      dirs: ['src/composables', 'src/stores'],
-      dts: 'src/auto-imports.d.ts',
-    }),
     Components({
       dirs: [
         'src/components/atoms',
@@ -951,7 +938,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': resolve(__dirname, 'src'),
+      '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
 })
@@ -959,267 +946,38 @@ export default defineConfig({
 
 ---
 
-## 📦 Estructura de tipos TypeScript recomendada
+## 📦 Estructura de datos (formas de objetos)
 
-```ts
-// types/models.ts
+```js
+// === Formas de dominio ===
 
-interface Usuario {
-  id: number
-  nombre_usuario: string
-  correo_electronico: string
-  fecha_vencimiento_cum?: number
-  roles: UsuarioRol[]
-}
+// Usuario:        { id, nombre_usuario, correo_electronico, fecha_vencimiento_cum?, roles: UsuarioRol[] }
+// UsuarioRol:     { id_rol, rol_nombre, id_grupo?, grupo_nombre? }
+// Perfil:         { id, id_usuario, cum?, nombre, apellido_paterno, apellido_materno?, fecha_nacimiento, lugar_nacimiento?, genero?, id_seccion_actual?, id_religion?, id_grupo?, calle?, num_exterior?, id_colonia? }
+// PerfilSalud:    { id, id_perfil, id_tipo_sangre?, peso_kg?, talla_cm?, id_alimentacion?, alerta_medica?, tiene_alergias, tiene_antecedentes, tiene_vacunas, tratamientos?, observaciones? }
+// Alergia:        { id_alergeno, alergeno_nombre, id_reaccion?, severidad, medicamento_alternativo? }
+// Antecedente:    { id_antecedente, antecedente_nombre, presenta, descripcion? }
+// Vacuna:         { id_vacuna, vacuna_nombre, aplico, padecio, fecha_aplicacion?, notas? }
+// ContactoEmergencia: { id_contacto, nombre, telefono, parentesco, orden }
+// Afiliacion:     { id, proveedor_nombre, numero_poliza, tipo_beneficiario }
+// EtapaProgresion: { id, id_tipo_seccion, nombre, orden, es_inicial }
+// Competencia:    { id, id_tipo_seccion, id_etapa?, nombre, plano_relacion }
+// Saber:          { id, id_competencia, id_categoria_desarrollo, nombre, descripcion }
+// AccionPersonal: { id, id_saber, id_perfil, id_ciclo?, descripcion, inspiracion?, sensacion?, retos?, mejoras?, completado, creado_el }
+// CicloPrograma:  { id, id_seccion, nombre, id_responsable, id_categoria_desarrollo, fecha_inicio, fecha_fin, activo }
+// ProgramaActividad: { id, id_ciclo, id_seccion, id_responsable, tipo, nombre, fecha }
+// ActaConsejo:    { id, id_seccion, tipo_acta, fecha, orden_del_dia, acuerdos, id_preside, id_elabora }
+// Transaccion:    { id, id_seccion, monto, tipo, concepto, fecha, id_registrado_por }
+// SugerenciaCatalogo: { id, tabla, nombre, datos_extra?, estado, id_sugerido_por, id_revisado_por?, id_registro_creado?, motivo_rechazo?, creado_el }
+// BajaMiembro:    { id, id_perfil, fecha_baja, tipo, motivo, id_registrado_por }
+// EnlaceSeccion:  { id, id_perfil, id_seccion_origen, id_seccion_destino?, fecha_inicio, fecha_fin_estimada, fecha_fin_real?, activo, tipo_destino }
 
-interface UsuarioRol {
-  id_rol: number
-  rol_nombre: string
-  id_grupo?: number
-  grupo_nombre?: string
-}
+// === Formas de respuesta API ===
 
-interface Perfil {
-  id: number
-  id_usuario: number
-  cum?: string
-  nombre: string
-  apellido_paterno: string
-  apellido_materno?: string
-  fecha_nacimiento: number // Unix ms
-  lugar_nacimiento?: string
-  genero?: string // 'M', 'F', 'O'
-  id_seccion_actual?: number
-  id_religion?: number
-  id_grupo?: number
-  calle?: string
-  num_exterior?: string
-  id_colonia?: number
-}
-
-interface PerfilSalud {
-  id: number
-  id_perfil: number
-  id_tipo_sangre?: number
-  peso_kg?: number
-  talla_cm?: number
-  id_alimentacion?: number
-  alerta_medica?: string
-  tiene_alergias: boolean
-  tiene_antecedentes: boolean
-  tiene_vacunas: boolean
-  tratamientos?: string
-  observaciones?: string
-}
-
-interface Alergia {
-  id_alergeno: number
-  alergeno_nombre: string
-  id_reaccion?: number
-  severidad: string
-  medicamento_alternativo?: string
-}
-
-interface Antecedente {
-  id_antecedente: number
-  antecedente_nombre: string
-  presenta: boolean
-  descripcion?: string
-}
-
-interface Vacuna {
-  id_vacuna: number
-  vacuna_nombre: string
-  aplico: boolean
-  padecio: boolean
-  fecha_aplicacion?: number
-  notas?: string
-}
-
-interface ContactoEmergencia {
-  id_contacto: number
-  nombre: string
-  telefono: string
-  parentesco: string
-  orden: number
-}
-
-interface Afiliacion {
-  id: number
-  proveedor_nombre: string
-  numero_poliza: string
-  tipo_beneficiario: string
-}
-
-interface EtapaProgresion {
-  id: number
-  id_tipo_seccion: number
-  nombre: string
-  orden: number
-  es_inicial: boolean
-}
-
-interface Competencia {
-  id: number
-  id_tipo_seccion: number
-  id_etapa?: number
-  nombre: string // genérico
-  plano_relacion: string
-}
-
-interface Saber {
-  id: number
-  id_competencia: number
-  id_categoria_desarrollo: number
-  nombre: string
-  descripcion: string
-}
-
-interface AccionPersonal {
-  id: number
-  id_saber: number
-  id_perfil: number
-  id_ciclo?: number
-  descripcion: string
-  inspiracion?: string
-  sensacion?: string
-  retos?: string
-  mejoras?: string
-  completado: boolean
-  creado_el: number
-}
-
-interface CicloPrograma {
-  id: number
-  id_seccion: number
-  nombre: string
-  id_responsable: number
-  id_categoria_desarrollo: number
-  fecha_inicio: number
-  fecha_fin: number
-  activo: boolean
-}
-
-interface ProgramaActividad {
-  id: number
-  id_ciclo: number
-  id_seccion: number
-  id_responsable: number
-  tipo: 'interno' | 'externo'
-  nombre: string
-  fecha: number
-}
-
-interface ActaConsejo {
-  id: number
-  id_seccion: number
-  tipo_acta: string
-  fecha: number
-  orden_del_dia: string
-  acuerdos: string
-  id_preside: number
-  id_elabora: number
-}
-
-interface Transaccion {
-  id: number
-  id_seccion: number
-  monto: number
-  tipo: 'ingreso' | 'egreso'
-  concepto: string
-  fecha: number
-  id_registrado_por: number
-}
-
-interface SugerenciaCatalogo {
-  id: number
-  tabla: string
-  nombre: string
-  datos_extra?: string
-  estado: 'pendiente' | 'aprobado' | 'rechazado'
-  id_sugerido_por: number
-  id_revisado_por?: number
-  id_registro_creado?: number
-  motivo_rechazo?: string
-  creado_el: number
-}
-
-interface BajaMiembro {
-  id: number
-  id_perfil: number
-  fecha_baja: number
-  tipo: 'vencimiento' | 'manual' | 'reingreso'
-  motivo: string
-  id_registrado_por: number
-}
-
-interface EnlaceSeccion {
-  id: number
-  id_perfil: number
-  id_seccion_origen: number
-  id_seccion_destino?: number
-  fecha_inicio: number
-  fecha_fin_estimada: number
-  fecha_fin_real?: number
-  activo: boolean
-  tipo_destino: 'seccion' | 'vida_adulta'
-}
-
-// types/api.ts
-
-interface DataResponse<T> {
-  data: T
-}
-
-interface ListResponse<T> {
-  data: T[]
-}
-
-interface ErrorResponse {
-  error: {
-    codigo: string
-    mensaje: string
-    detalles?: Array<{ campo: string; motivo: string }>
-  }
-}
-```
-
----
-
-## 🔧 Configuración del proyecto (vite.config.ts)
-
-```ts
-import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import AutoImport from 'unplugin-auto-import/vite'
-import Components from 'unplugin-vue-components/vite'
-import { resolve } from 'path'
-
-export default defineConfig({
-  plugins: [
-    vue(),
-    AutoImport({
-      imports: ['vue', 'vue-router', 'pinia'],
-      dirs: ['src/composables', 'src/stores'],
-      dts: 'src/auto-imports.d.ts',
-    }),
-    Components({
-      dirs: [
-        'src/components/atoms',
-        'src/components/molecules',
-        'src/components/organisms',
-        'src/components/templates',
-      ],
-      extensions: ['vue'],
-      dts: 'src/components.d.ts',
-    }),
-  ],
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, 'src'),
-    },
-  },
-})
+// Éxito objeto:   { data: { ... } }
+// Éxito lista:    { data: [ ... ] }
+// Éxito + msg:    { data: { ... }, mensaje: '...' }
+// Error:          { error: { codigo, mensaje, detalles?: [{ campo, motivo }] } }
 ```
 
 ---
@@ -1239,8 +997,10 @@ La app debe soportar modo claro y oscuro usando la clase `.dark` en el elemento 
 
 ### Composable `useTheme`
 
-```ts
-// composables/useTheme.ts — se auto-importa, NO escribir import
+```js
+// composables/useTheme.js
+
+import { ref } from 'vue'
 
 export function useTheme() {
   const isDark = ref(false)
@@ -1272,13 +1032,16 @@ export function useTheme() {
 <template>
   <header>
     <BaseButton @click="theme.toggle" variant="ghost">
-      <LucideSun v-if="theme.isDark.value" class="w-5 h-5" />
-      <LucideMoon v-else class="w-5 h-5" />
+      <Sun v-if="theme.isDark.value" class="w-5 h-5" />
+      <Moon v-else class="w-5 h-5" />
     </BaseButton>
   </header>
 </template>
 
-<script setup lang="ts">
+<script setup>
+import { useTheme } from '@/composables/useTheme'
+import { Sun, Moon } from '@lucide/vue'
+
 const theme = useTheme()
 </script>
 ```
@@ -1461,8 +1224,8 @@ Las paletas están calibradas para contraste **en ambos modos**: el bloque `.dar
 
 ## ✅ Checklist de implementación
 
-- [ ] Setup de proyecto: Vite + Vue 3 + TS + Tailwind v4
-- [ ] Configuración de auto-imports (Vue API, componentes, composables)
+- [ ] Setup de proyecto: Vite + Vue 3 + Tailwind v4
+- [ ] Configuración de unplugin-vue-components (auto-import de componentes)
 - [ ] Cliente HTTP (fetch nativo con interceptores 401 y errores)
 - [ ] Store de autenticación (login, logout, token, roles)
 - [ ] Protección de rutas (beforeEach por auth + rol)
