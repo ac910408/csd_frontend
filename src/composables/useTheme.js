@@ -1,41 +1,30 @@
 import { ref, onMounted } from 'vue'
 
 export function useTheme() {
-  // Estado reactivo para saber si estamos en modo oscuro
-  const isDark = ref(false)
+  const theme = ref('system') // 'light', 'dark', o 'system'
 
-  const toggleTheme = () => {
-    // Alternamos el estado interno
-    isDark.value = !isDark.value
+  const setTheme = (newTheme) => {
+    theme.value = newTheme
+    localStorage.setItem('theme', newTheme)
+    applyTheme()
+  }
 
-    // Accedemos al elemento raíz (<html>)
+  const applyTheme = () => {
     const root = document.documentElement
+    const isDark =
+      theme.value === 'dark' ||
+      (theme.value === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
 
-    if (isDark.value) {
-      root.classList.add('dark')
-      localStorage.setItem('theme', 'dark')
-    } else {
-      root.classList.remove('dark')
-      localStorage.setItem('theme', 'light')
-    }
+    if (isDark) root.classList.add('dark')
+    else root.classList.remove('dark')
   }
 
   onMounted(() => {
-    // Al montar, verificamos si hay una preferencia guardada o del sistema
-    const savedTheme = localStorage.getItem('theme')
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-      isDark.value = true
-      document.documentElement.classList.add('dark')
-    } else {
-      isDark.value = false
-      document.documentElement.classList.remove('dark')
-    }
+    theme.value = localStorage.getItem('theme') || 'system'
+    applyTheme()
+    // Escuchar cambios del sistema si está en modo system
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme)
   })
 
-  return {
-    isDark,
-    toggleTheme,
-  }
+  return { theme, setTheme }
 }
