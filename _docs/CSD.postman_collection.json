@@ -1,0 +1,1112 @@
+{
+  "info": {
+    "name": "CSD Backend",
+    "description": "API REST para gestión de grupos scout. Base URL configurable en variable {{baseUrl}}.\nEl token JWT se auto-guarda al hacer login (test script).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080", "type": "string" },
+    { "key": "token", "value": "", "type": "string" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "🔐 Auth",
+      "item": [
+        {
+          "name": "POST /auth/login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var resp = JSON.parse(responseBody);",
+                  "if (resp.data && resp.data.token) {",
+                  "    pm.collectionVariables.set('token', resp.data.token);",
+                  "    console.log('Token JWT guardado');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"correo_electronico\":\"admin@csd.local\",\"contrasena\":\"Admin123!\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "POST /auth/register",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nombre_usuario\":\"nuevo\",\"correo_electronico\":\"nuevo@csd.local\",\"contrasena\":\"Test123!\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "register"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📋 Catálogos (públicos)",
+      "item": [
+        {
+          "name": "GET /catalogos/roles",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/catalogos/roles",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalogos", "roles"]
+            }
+          }
+        },
+        {
+          "name": "GET /catalogos/cargos",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/catalogos/cargos",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalogos", "cargos"]
+            }
+          }
+        },
+        {
+          "name": "GET /catalogos/tipos-seccion",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/catalogos/tipos-seccion",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalogos", "tipos-seccion"]
+            }
+          }
+        },
+        {
+          "name": "GET /catalogos/ods",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/catalogos/ods",
+              "host": ["{{baseUrl}}"],
+              "path": ["catalogos", "ods"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🏕️ Organización",
+      "item": [
+        {
+          "name": "GET /provincias",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/provincias",
+              "host": ["{{baseUrl}}"],
+              "path": ["provincias"]
+            }
+          }
+        },
+        {
+          "name": "GET /provincias/:id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/provincias/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["provincias", "1"]
+            }
+          }
+        },
+        {
+          "name": "POST /provincias",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nombre\":\"Nueva Provincia\",\"clave\":\"NPV\",\"id_estado\":20}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/provincias",
+              "host": ["{{baseUrl}}"],
+              "path": ["provincias"]
+            }
+          }
+        },
+        {
+          "name": "GET /grupos",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/grupos",
+              "host": ["{{baseUrl}}"],
+              "path": ["grupos"]
+            }
+          }
+        },
+        {
+          "name": "GET /grupos/:id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/grupos/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["grupos", "1"]
+            }
+          }
+        },
+        {
+          "name": "POST /grupos",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id_provincia\":1,\"numero\":10,\"nombre\":\"Nuevo Grupo\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/grupos",
+              "host": ["{{baseUrl}}"],
+              "path": ["grupos"]
+            }
+          }
+        },
+        {
+          "name": "GET /grupos/:id/seguridad",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/grupos/1/seguridad",
+              "host": ["{{baseUrl}}"],
+              "path": ["grupos", "1", "seguridad"]
+            }
+          }
+        },
+        {
+          "name": "PUT /grupos/:id/seguridad",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{}" },
+            "url": {
+              "raw": "{{baseUrl}}/grupos/1/seguridad",
+              "host": ["{{baseUrl}}"],
+              "path": ["grupos", "1", "seguridad"]
+            }
+          }
+        },
+        {
+          "name": "GET /secciones",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/secciones",
+              "host": ["{{baseUrl}}"],
+              "path": ["secciones"]
+            }
+          }
+        },
+        {
+          "name": "GET /secciones/:id",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/secciones/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["secciones", "1"]
+            }
+          }
+        },
+        {
+          "name": "POST /secciones",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id_grupo\":1,\"id_tipo_seccion\":1,\"nombre_propio\":\"Lobatos\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/secciones",
+              "host": ["{{baseUrl}}"],
+              "path": ["secciones"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👤 Perfil y Salud",
+      "item": [
+        {
+          "name": "GET /perfil",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/perfil",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil"]
+            }
+          }
+        },
+        {
+          "name": "PUT /perfil",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"fecha_nacimiento\":\"2010-05-15T00:00:00Z\",\"lugar_nacimiento\":\"Oaxaca\",\"id_grupo\":1}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/perfil",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil"]
+            }
+          }
+        },
+        {
+          "name": "GET /perfil/salud",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/perfil/salud",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "salud"]
+            }
+          }
+        },
+        {
+          "name": "PUT /perfil/salud",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"peso\":70,\"talla\":175}" },
+            "url": {
+              "raw": "{{baseUrl}}/perfil/salud",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "salud"]
+            }
+          }
+        },
+        {
+          "name": "DELETE /perfil/salud",
+          "description": "Ejercer derecho al olvido: borra datos médicos en cascada",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "{{baseUrl}}/perfil/salud",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "salud"]
+            }
+          }
+        },
+        {
+          "name": "GET /perfil/salud/alergias",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/perfil/salud/alergias",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "salud", "alergias"]
+            }
+          }
+        },
+        {
+          "name": "POST /perfil/salud/alergias",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id_alergeno\":1,\"severidad\":\"leve\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/perfil/salud/alergias",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "salud", "alergias"]
+            }
+          }
+        },
+        {
+          "name": "GET /perfil/salud/antecedentes",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/perfil/salud/antecedentes",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "salud", "antecedentes"]
+            }
+          }
+        },
+        {
+          "name": "POST /perfil/salud/antecedentes",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id_antecedente\":1,\"presenta\":true}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/perfil/salud/antecedentes",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "salud", "antecedentes"]
+            }
+          }
+        },
+        {
+          "name": "GET /perfil/salud/vacunas",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/perfil/salud/vacunas",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "salud", "vacunas"]
+            }
+          }
+        },
+        {
+          "name": "POST /perfil/salud/vacunas",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id_vacuna\":1,\"aplico\":true}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/perfil/salud/vacunas",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "salud", "vacunas"]
+            }
+          }
+        },
+        {
+          "name": "GET /perfil/salud/contactos",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/perfil/salud/contactos",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "salud", "contactos"]
+            }
+          }
+        },
+        {
+          "name": "POST /perfil/salud/contactos",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"contacto\":{\"nombre\":\"María López\",\"telefono\":\"9511234567\"},\"vinculo\":{\"parentesco\":\"madre\",\"orden\":1}}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/perfil/salud/contactos",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "salud", "contactos"]
+            }
+          }
+        },
+        {
+          "name": "GET /perfil/salud/afiliaciones",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/perfil/salud/afiliaciones",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "salud", "afiliaciones"]
+            }
+          }
+        },
+        {
+          "name": "POST /perfil/salud/afiliaciones",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"proveedor_id\":1,\"numero_poliza\":\"12345\",\"id_tipo_beneficiario\":1}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/perfil/salud/afiliaciones",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "salud", "afiliaciones"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "⚜️ Progresión",
+      "item": [
+        {
+          "name": "GET /perfil/progresion/acciones",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/perfil/progresion/acciones",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "progresion", "acciones"]
+            }
+          }
+        },
+        {
+          "name": "POST /perfil/progresion/acciones",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id_saber\":1,\"id_ciclo\":1,\"descripcion\":\"Mi acción educativa\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/perfil/progresion/acciones",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "progresion", "acciones"]
+            }
+          }
+        },
+        {
+          "name": "PUT /perfil/progresion/acciones/:id",
+          "description": "Actualizar reflexión o estado de una acción personal",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"descripcion\":\"Actualizado\",\"estado\":\"cumplido\",\"sensacion\":\"Me sentí muy bien\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/perfil/progresion/acciones/1",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "progresion", "acciones", "1"]
+            }
+          }
+        },
+        {
+          "name": "GET /perfil/progresion/especialidades",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/perfil/progresion/especialidades",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "progresion", "especialidades"]
+            }
+          }
+        },
+        {
+          "name": "POST /perfil/progresion/especialidades",
+          "description": "Registrar especialidad (formato CONOZCO/APLICO/COMPARTO)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id_cat_especialidad\":1,\"id_seccion\":1,\"nombre\":\"Aprendiendo a hablar\",\"conozco\":\"Qué es la comunicación\",\"aplico\":\"Di una plática\",\"comparto\":\"Enseñé a otros\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/perfil/progresion/especialidades",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "progresion", "especialidades"]
+            }
+          }
+        },
+        {
+          "name": "GET /perfil/progresion/logros/compromiso",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/perfil/progresion/logros/compromiso",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "progresion", "logros", "compromiso"]
+            }
+          }
+        },
+        {
+          "name": "PUT /perfil/progresion/logros/compromiso",
+          "description": "Registrar promesa scout (hito único)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"obtenido_el\":\"2024-03-15T00:00:00Z\",\"lugar\":\"Campamento San Felipe\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/perfil/progresion/logros/compromiso",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "progresion", "logros", "compromiso"]
+            }
+          }
+        },
+        {
+          "name": "GET /perfil/progresion/logros/insignias-finales",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/perfil/progresion/logros/insignias-finales",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "progresion", "logros", "insignias-finales"]
+            }
+          }
+        },
+        {
+          "name": "POST /perfil/progresion/logros/insignias-finales",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id_insignia_final\":1,\"obtenido_el\":\"2024-06-01T00:00:00Z\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/perfil/progresion/logros/insignias-finales",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "progresion", "logros", "insignias-finales"]
+            }
+          }
+        },
+        {
+          "name": "GET /perfil/progresion/completa",
+          "description": "Resumen ✅/❌ de todas las progresiones del joven",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/perfil/progresion/completa",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "progresion", "completa"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📅 Operación",
+      "item": [
+        {
+          "name": "GET /secciones/:id/ciclos",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/secciones/1/ciclos",
+              "host": ["{{baseUrl}}"],
+              "path": ["secciones", "1", "ciclos"]
+            }
+          }
+        },
+        {
+          "name": "POST /secciones/:id/ciclos",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id_responsable\":1,\"nombre\":\"Ciclo 2025-1\",\"id_categoria_desarrollo\":1}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/secciones/1/ciclos",
+              "host": ["{{baseUrl}}"],
+              "path": ["secciones", "1", "ciclos"]
+            }
+          }
+        },
+        {
+          "name": "GET /ciclos/:id/programas",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/ciclos/1/programas",
+              "host": ["{{baseUrl}}"],
+              "path": ["ciclos", "1", "programas"]
+            }
+          }
+        },
+        {
+          "name": "POST /ciclos/:id/programas",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id_seccion\":1,\"id_responsable\":1,\"tipo\":\"interno\",\"nombre\":\"Campamento\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/ciclos/1/programas",
+              "host": ["{{baseUrl}}"],
+              "path": ["ciclos", "1", "programas"]
+            }
+          }
+        },
+        {
+          "name": "POST /programas/:id/asistencia",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id_perfil\":1,\"presente\":true}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/programas/1/asistencia",
+              "host": ["{{baseUrl}}"],
+              "path": ["programas", "1", "asistencia"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "📋 Actas",
+      "item": [
+        {
+          "name": "GET /secciones/:id/actas",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/secciones/1/actas",
+              "host": ["{{baseUrl}}"],
+              "path": ["secciones", "1", "actas"]
+            }
+          }
+        },
+        {
+          "name": "POST /secciones/:id/actas",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"tipo_acta\":\"ordinaria\",\"fecha\":\"2024-01-15T00:00:00Z\",\"orden_del_dia\":\"1. Revisión\\n2. Planeación\",\"acuerdos\":\"Se aprueba el plan\",\"id_preside\":1,\"id_elabora\":1}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/secciones/1/actas",
+              "host": ["{{baseUrl}}"],
+              "path": ["secciones", "1", "actas"]
+            }
+          }
+        },
+        {
+          "name": "POST /actas/:id/asistencia",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id_perfil\":1,\"presente\":true}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/actas/1/asistencia",
+              "host": ["{{baseUrl}}"],
+              "path": ["actas", "1", "asistencia"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🛡️ Protocolos",
+      "item": [
+        {
+          "name": "GET /programas/:id/seguridad",
+          "description": "Seguridad del programa (fallback a genérico del grupo)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/programas/1/seguridad",
+              "host": ["{{baseUrl}}"],
+              "path": ["programas", "1", "seguridad"]
+            }
+          }
+        },
+        {
+          "name": "PUT /programas/:id/seguridad",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"servicios_disponibles\":\"Agua, baños\",\"tel_policia\":\"911\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/programas/1/seguridad",
+              "host": ["{{baseUrl}}"],
+              "path": ["programas", "1", "seguridad"]
+            }
+          }
+        },
+        {
+          "name": "GET /programas/:id/traslado",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/programas/1/traslado",
+              "host": ["{{baseUrl}}"],
+              "path": ["programas", "1", "traslado"]
+            }
+          }
+        },
+        {
+          "name": "PUT /programas/:id/traslado",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"tipo_transporte\":\"particular\",\"salida_fecha_hora\":\"2024-06-15T08:00:00Z\",\"salida_punto\":\"Local del grupo\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/programas/1/traslado",
+              "host": ["{{baseUrl}}"],
+              "path": ["programas", "1", "traslado"]
+            }
+          }
+        },
+        {
+          "name": "GET /traslados/:id/pasajeros",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/traslados/1/pasajeros",
+              "host": ["{{baseUrl}}"],
+              "path": ["traslados", "1", "pasajeros"]
+            }
+          }
+        },
+        {
+          "name": "POST /traslados/:id/pasajeros",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id_perfil\":1,\"seccion\":\"Manada\",\"cum\":\"ASO1234567\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/traslados/1/pasajeros",
+              "host": ["{{baseUrl}}"],
+              "path": ["traslados", "1", "pasajeros"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "💰 Finanzas",
+      "item": [
+        {
+          "name": "GET /transacciones",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/transacciones?seccion_id=1",
+              "host": ["{{baseUrl}}"],
+              "path": ["transacciones"],
+              "query": [{ "key": "seccion_id", "value": "1" }]
+            }
+          }
+        },
+        {
+          "name": "POST /transacciones",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id_seccion\":1,\"monto\":500,\"tipo\":\"ingreso\",\"concepto\":\"Cuota mensual\",\"id_registrado_por\":1}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/transacciones",
+              "host": ["{{baseUrl}}"],
+              "path": ["transacciones"]
+            }
+          }
+        },
+        {
+          "name": "GET /secciones/:id/inventario",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/secciones/1/inventario",
+              "host": ["{{baseUrl}}"],
+              "path": ["secciones", "1", "inventario"]
+            }
+          }
+        },
+        {
+          "name": "POST /secciones/:id/inventario",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"nombre\":\"Tienda de campaña\",\"cantidad\":2,\"estado_fisico\":\"Bueno\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/secciones/1/inventario",
+              "host": ["{{baseUrl}}"],
+              "path": ["secciones", "1", "inventario"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "💡 Sugerencias",
+      "item": [
+        {
+          "name": "GET /sugerencias",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/sugerencias",
+              "host": ["{{baseUrl}}"],
+              "path": ["sugerencias"]
+            }
+          }
+        },
+        {
+          "name": "POST /sugerencias",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"tabla\":\"cat_alergeno\",\"nombre\":\"Níquel\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/sugerencias",
+              "host": ["{{baseUrl}}"],
+              "path": ["sugerencias"]
+            }
+          }
+        },
+        {
+          "name": "GET /admin/sugerencias",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/admin/sugerencias",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "sugerencias"]
+            }
+          }
+        },
+        {
+          "name": "POST /admin/sugerencias/:id/resolver",
+          "description": "Resolver sugerencia: aprobar_nuevo, vincular_existente o rechazar",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"accion\":\"aprobar_nuevo\"}" },
+            "url": {
+              "raw": "{{baseUrl}}/admin/sugerencias/1/resolver",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "sugerencias", "1", "resolver"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👤 Usuarios (admin)",
+      "item": [
+        {
+          "name": "GET /usuarios/:id/roles",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/1/roles",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios", "1", "roles"]
+            }
+          }
+        },
+        {
+          "name": "POST /usuarios/:id/roles",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\"id_rol\":2,\"id_grupo\":1}" },
+            "url": {
+              "raw": "{{baseUrl}}/usuarios/1/roles",
+              "host": ["{{baseUrl}}"],
+              "path": ["usuarios", "1", "roles"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🛡️ Trazabilidad y Reportes",
+      "item": [
+        {
+          "name": "PUT /programas/:id/estado (cancelar)",
+          "description": "Cambiar estado del programa a cancelado",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"estado\":\"cancelado\",\"motivo\":\"Evento cancelado por mal clima\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/programas/1/estado",
+              "host": ["{{baseUrl}}"],
+              "path": ["programas", "1", "estado"]
+            }
+          }
+        },
+        {
+          "name": "PUT /programas/:id/estado (reprogramar)",
+          "description": "Reprogramar: crea automáticamente un nuevo programa con la nueva fecha",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"estado\":\"reprogramado\",\"motivo\":\"Lluvias pronosticadas\",\"nueva_fecha_inicio\":\"2025-06-21T00:00:00Z\",\"nuevo_lugar\":\"Local del grupo\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/programas/1/estado",
+              "host": ["{{baseUrl}}"],
+              "path": ["programas", "1", "estado"]
+            }
+          }
+        },
+        {
+          "name": "GET /programas/:id/cambios",
+          "description": "Historial de cambios del programa (trazabilidad)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/programas/1/cambios",
+              "host": ["{{baseUrl}}"],
+              "path": ["programas", "1", "cambios"]
+            }
+          }
+        },
+        {
+          "name": "GET /reportes/mensual",
+          "description": "Reporte mensual planeado vs real de una sección",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/reportes/mensual?seccion_id=1&anio=2025&mes=6",
+              "host": ["{{baseUrl}}"],
+              "path": ["reportes", "mensual"],
+              "query": [
+                { "key": "seccion_id", "value": "1" },
+                { "key": "anio", "value": "2025" },
+                { "key": "mes", "value": "6" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET /reportes/mensual-completo",
+          "description": "Reporte mensual completo: membresía, actividades, enlaces, progresiones, tesorería y modificaciones",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/reportes/mensual-completo?seccion_id=1&anio=2025&mes=6",
+              "host": ["{{baseUrl}}"],
+              "path": ["reportes", "mensual-completo"],
+              "query": [
+                { "key": "seccion_id", "value": "1" },
+                { "key": "anio", "value": "2025" },
+                { "key": "mes", "value": "6" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "👥 Miembros y Enlaces",
+      "item": [
+        {
+          "name": "GET /secciones/:id/miembros",
+          "description": "Lista miembros activos + enlaces de la sección",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/secciones/1/miembros",
+              "host": ["{{baseUrl}}"],
+              "path": ["secciones", "1", "miembros"]
+            }
+          }
+        },
+        {
+          "name": "POST /secciones/:id/enlaces",
+          "description": "Iniciar período de enlace entre secciones",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id_perfil\":1,\"id_seccion_destino\":2,\"fecha_fin_estimada\":\"2025-09-01T00:00:00Z\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/secciones/1/enlaces",
+              "host": ["{{baseUrl}}"],
+              "path": ["secciones", "1", "enlaces"]
+            }
+          }
+        },
+        {
+          "name": "PUT /enlaces/:id/cerrar",
+          "description": "Cerrar enlace manualmente (antes de fecha estimada)",
+          "request": {
+            "method": "PUT",
+            "url": {
+              "raw": "{{baseUrl}}/enlaces/1/cerrar",
+              "host": ["{{baseUrl}}"],
+              "path": ["enlaces", "1", "cerrar"]
+            }
+          }
+        },
+        {
+          "name": "POST /perfil/:id/baja (manual)",
+          "description": "Dar de baja a un miembro (admin/dirigente)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"tipo\":\"manual\",\"motivo\":\"Dejó de asistir\"}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/perfil/1/baja",
+              "host": ["{{baseUrl}}"],
+              "path": ["perfil", "1", "baja"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
