@@ -1,0 +1,90 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-primary: var(--color-primary);
+  --color-primary-contrast: var(--color-primary-contrast);
+  --color-secondary: var(--color-secondary);
+  --color-secondary-contrast: var(--color-secondary-contrast);
+  --color-accent: var(--color-accent);
+  --color-accent-contrast: var(--color-accent-contrast);
+  --color-info: var(--color-info);
+  --color-info-contrast: var(--color-info-contrast);
+  --color-success: var(--color-success);
+  --color-success-contrast: var(--color-success-contrast);
+  --color-warning: var(--color-warning);
+  --color-warning-contrast: var(--color-warning-contrast);
+  --color-error: var(--color-error);
+  --color-error-contrast: var(--color-error-contrast);
+  --color-neutral: var(--color-neutral);
+  --color-neutral-contrast: var(--color-neutral-contrast);
+  --color-base-100: var(--color-base-100);
+  --color-base-content: var(--color-base-content);
+  --color-base-200: var(--color-base-200);
+  --color-base-300: var(--color-base-300);
+}
+
+@layer base {
+  :root {
+    /* Identidad (Claro) */
+    --color-clan: #e30613;
+    --color-comunidad: #0063a5;
+    --color-grupo: #182857;
+    --color-manada: #d5a940;
+    --color-mundial: #5d2f88;
+    --color-nacional: #6c1c45;
+    --color-scouters: #a8d1ec;
+    --color-tropa: #007e37;
+
+    /* Sistema Semántico: TEMA CLARO */
+    --color-primary: var(--color-mundial);
+    --color-primary-contrast: #ffffff;
+    --color-secondary: var(--color-grupo);
+    --color-secondary-contrast: #ffffff;
+    --color-accent: var(--color-scouters);
+    --color-accent-contrast: #000000;
+    --color-info: var(--color-comunidad);
+    --color-info-contrast: #ffffff;
+    --color-success: var(--color-tropa);
+    --color-success-contrast: #ffffff;
+    --color-warning: var(--color-manada);
+    --color-warning-contrast: #000000;
+    --color-error: var(--color-clan);
+    --color-error-contrast: #ffffff;
+
+    --color-neutral: #000000;
+    --color-neutral-contrast: #ffffff;
+    --color-base-100: #fafafa;
+    --color-base-content: #111111;
+    --color-base-200: #f0f0f0;
+    --color-base-300: #e0e0e0;
+  }
+
+  .dark {
+    /* Sistema Semántico: TEMA OSCURO */
+    /*--color-primary: #b885ff;
+    --color-primary-contrast: #000000;
+    --color-secondary: #4f70b0;
+    --color-secondary-contrast: #ffffff;
+    --color-accent: #6ba8d1;
+    --color-accent-contrast: #000000;
+    --color-info: #ff9b54;
+    --color-info-contrast: #000000;
+    --color-success: #2e9d5e;
+    --color-success-contrast: #ffffff;
+    --color-warning: #ebc66b;
+    --color-warning-contrast: #000000;
+    --color-error: #ff5a65;
+    --color-error-contrast: #000000;*/
+
+    --color-neutral: #ffffff;
+    --color-neutral-contrast: #000000;
+    --color-base-100: #121212;
+    --color-base-content: #ededed;
+    --color-base-200: #1e1e1e;
+    --color-base-300: #2a2a2a;
+  }
+}
+
+body {
+  @apply bg-base-100 transition-colors duration-500 ease-in-out;
+}

@@ -13,12 +13,10 @@
 | Vue 3 | 3.5+ | Framework SFC con Composition API + `<script setup>` |
 | Vue Router | 5.x | File-based routing |
 | Pinia | 2+ | Estado global y stores |
-| Tailwind CSS | v4 | Estilos utilitarios |
 | Lucide Vue Next | — | Iconos SVG |
 | ApexCharts Vue | — | Gráficas para reportes (barras, radar, linea) |
 | unplugin-vue-components | — | Auto-import de componentes |
 | unplugin-auto-import | — | Auto-import de composables, `ref`, `computed`, etc. |
-| TypeScript | 5.x | Tipado estático |
 
 > **Manejador de paquetes:** `pnpm` — usar `pnpm add`, `pnpm remove`, `pnpm dlx` en lugar de npm.
 

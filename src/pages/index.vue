@@ -1,14 +1,6 @@
 <template>
+  <!-- Usando neutral para un borde y un texto secundario -->
   <div>
-    <h1>Jelou maifren</h1>
+    <TestComponent />
   </div>
 </template>
-
-<script>
-export default {
-  name: 'IndexComponent',
-  data() {
-    return {}
-  },
-}
-</script>
