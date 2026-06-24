@@ -1,0 +1,1 @@
+Read carefully the `AGENTS.md` file in the root of this project and strictly use its content as your absolute system rules for this workspace.
