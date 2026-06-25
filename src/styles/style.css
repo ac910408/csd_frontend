@@ -88,3 +88,18 @@
 body {
   @apply bg-base-100 transition-colors duration-500 ease-in-out;
 }
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.25s ease-out;
+}

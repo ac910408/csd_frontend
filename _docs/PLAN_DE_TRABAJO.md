@@ -6,186 +6,184 @@
 
 ---
 
-## 🔰 Fase 0: Corrección de stack y deuda técnica
+## ✅ Fase 0: Corrección de stack y deuda técnica
 
-- [ ] **0.1** Instalar dependencia faltante: `@lucide/vue`
-- [ ] **0.2** Remover `unplugin-auto-import` si está instalado (no se usará)
-- [ ] **0.3** Verificar `tailwind.config.mjs` y `style.css` — colores de identidad como clases Tailwind
-- [ ] **0.4** Eliminar archivos placeholder: `stores/counter.js`, `components/_dev/TestComponent.vue`, `pages/index.vue` temporal
-- [ ] **0.5** Crear estructura de carpetas Atomic Design: `atoms/`, `molecules/`, `organisms/`, `templates/` dentro de `components/`
-- [ ] **0.6** Crear carpetas: `composables/`, `services/`, `utils/`
-- [ ] **0.7** Actualizar `vite.config.js`: solo `unplugin-vue-components` (sin `AutoImport`). Alias `@` apuntando a `./src`
-
----
-
-## 📋 Fase 1: Constantes y Utilidades Base
-
-- [ ] **1.1** `utils/constants.js` — Enumeraciones como objetos congelados: `ROLES`, `CARGOS`, `TIPOS_SECCION`, `ESTADO_ACCION`, `TIPO_TRANSACCION`, `TIPO_ACTA`
-- [ ] **1.2** `utils/format.js` — Formateo: `formatDate(ts)`, `formatCurrency(monto)`, `formatCUM(cum)`
-- [ ] **1.3** `utils/validators.js` — Validadores: `requerido`, `email`, `minLength(n)`, `maxLength(n)`, `telefono`, `cum` + composable `useForm()`
+- [x] **0.1** Instalar dependencia faltante: `@lucide/vue`
+- [x] **0.2** Remover `unplugin-auto-import` si está instalado (no se usará)
+- [x] **0.3** Verificar `tailwind.config.mjs` y `style.css` — colores de identidad como clases Tailwind
+- [x] **0.4** Eliminar archivos placeholder: `stores/counter.js`, `components/_dev/TestComponent.vue`, `pages/index.vue` temporal
+- [x] **0.5** Crear estructura de carpetas Atomic Design: `atoms/`, `molecules/`, `organisms/`, `templates/` dentro de `components/`
+- [x] **0.6** Crear carpetas: `composables/`, `services/`, `utils/`
+- [x] **0.7** Actualizar `vite.config.js`: solo `unplugin-vue-components` (sin `AutoImport`). Alias `@` apuntando a `./src`
 
 ---
 
-## 🧱 Fase 2: Atoms — Componentes Atómicos
+## ✅ Fase 1: Constantes y Utilidades Base
 
-- [ ] **2.1** `BaseButton.vue` — Variantes: `primary`, `secondary`, `ghost`, `danger`, `outline`. Sizes: `sm`, `md`, `lg`. Props: `color`, `disabled`, `loading`
-- [ ] **2.2** `BaseInput.vue` — Tipos: `text`, `email`, `password`, `number`, `tel`, `date`. Props: `modelValue`, `placeholder`, `disabled`, `error`
-- [ ] **2.3** `BaseBadge.vue` — Variantes semánticas: `primary`, `secondary`, `info`, `success`, `warning`, `error`. Content por slot
-- [ ] **2.4** `BaseModal.vue` — Props: `open`, `title`, `size`. Slots: `default`, `footer`. Emit: `close`. Con `Teleport` y backdrop
-- [ ] **2.5** `BaseCard.vue` — Props: `padding`, `hover`. Slots: `header`, `default`, `footer`
-- [ ] **2.6** `BaseIcon.vue` — Wrapper sobre `@lucide/vue`. Props: `name`, `size`, `color`. Pasar color vía `provideColor` cascade
-- [ ] **2.7** `BaseAvatar.vue` — Props: `src`, `alt`, `size`, `fallback` (iniciales). Con estado de carga
-- [ ] **2.8** `BaseSpinner.vue` — Props: `size`, `color`. SVG animado
-- [ ] **2.9** `BaseTable.vue` — Props: `data`, `columnas` (keys + labels), `cargando`, `vacio`. Slots para celdas custom. Ordenamiento por columna. Solo Tailwind
+- [x] **1.1** `utils/constants.js` — Enumeraciones como objetos congelados: `ROLES`, `CARGOS`, `TIPOS_SECCION`, `ESTADO_ACCION`, `TIPO_TRANSACCION`, `TIPO_ACTA`
+- [x] **1.2** `utils/format.js` — Formateo: `formatDate(ts)`, `formatCurrency(monto)`, `formatCUM(cum)`
+- [x] **1.3** `utils/validators.js` — Validadores: `requerido`, `email`, `minLength(n)`, `maxLength(n)`, `telefono`, `cum` + composable `useForm()`
 
 ---
 
-## 🧩 Fase 3: Molecules — Componentes Moleculares
+## ✅ Fase 2: Atoms — Componentes Atómicos
 
-- [ ] **3.1** `FormField.vue` — Wrapper label + error + slot input. Props: `label`, `error`, `required`, `help`
-- [ ] **3.2** `SearchBar.vue` — Props: `modelValue`, `placeholder`. Emit: `update:modelValue` con debounce. Ícono `Search` de `@lucide/vue`
-- [ ] **3.3** `PaginationBar.vue` — Props: `pagina`, `totalPaginas`, `total`. Emit: `cambiarPagina`
-- [ ] **3.4** `FilterChips.vue` — Props: `opciones`, `seleccionados`. Emit: `update:seleccionados`. Chips toggle
-- [ ] **3.5** `AlertMessage.vue` — Props: `type` (info/success/warning/error), `mensaje`, `cerrable`
-- [ ] **3.6** `EmptyState.vue` — Props: `titulo`, `descripcion`, `icono`, `accion` (label + callback)
-- [ ] **3.7** `ConfirmDialog.vue` — Compone `BaseModal` + `BaseButton`. Emit: `confirmar`, `cancelar`
-
----
-
-## 🌐 Fase 4: Servicios y Comunicación con API
-
-- [ ] **4.1** `services/api.js` — Cliente HTTP con `fetch` nativo. Interceptor 401 → redirect login. Interceptor errores → throw. Métodos: `get`, `post`, `put`, `del`. `BASE_URL` desde `VITE_API_URL`
-- [ ] **4.2** `.env` + `.env.example` — `VITE_API_URL=http://localhost:8080`
-- [ ] **4.3** `services/auth.service.js` — `login(creds)`, `register(data)`
-- [ ] **4.4** `services/profile.service.js` — CRUD perfil, salud, alergias, antecedentes, vacunas, contactos, afiliaciones
-- [ ] **4.5** `services/progresion.service.js` — Acciones, especialidades, logros ✅/❌
-- [ ] **4.6** `services/organization.service.js` — Provincias, grupos, secciones CRUD
-- [ ] **4.7** `services/operation.service.js` — Ciclos, programas, asistencia, actas, protocolos
-- [ ] **4.8** `services/finance.service.js` — Transacciones, inventario
-- [ ] **4.9** `services/catalog.service.js` + `services/admin.service.js` — Catálogos, sugerencias, usuarios
+- [x] **2.1** `BaseButton.vue` — Variantes: `primary`, `secondary`, `ghost`, `danger`, `outline`. Sizes: `sm`, `md`, `lg`. Props: `color`, `disabled`, `loading`
+- [x] **2.2** `BaseInput.vue` — Tipos: `text`, `email`, `password`, `number`, `tel`, `date`. Props: `modelValue`, `placeholder`, `disabled`, `error`
+- [x] **2.3** `BaseBadge.vue` — Variantes semánticas: `primary`, `secondary`, `info`, `success`, `warning`, `error`. Content por slot
+- [x] **2.4** `BaseModal.vue` — Props: `open`, `title`, `size`. Slots: `default`, `footer`. Emit: `close`. Con `Teleport` y backdrop
+- [x] **2.5** `BaseCard.vue` — Props: `padding`, `hover`. Slots: `header`, `default`, `footer`
+- [x] **2.6** `BaseIcon.vue` — Wrapper sobre `@lucide/vue`. Props: `name`, `size`, `color`. Pasar color vía `provideColor` cascade
+- [x] **2.7** `BaseAvatar.vue` — Props: `src`, `alt`, `size`, `fallback` (iniciales). Con estado de carga
+- [x] **2.8** `BaseSpinner.vue` — Props: `size`, `color`. SVG animado
+- [x] **2.9** `BaseTable.vue` — Props: `data`, `columnas` (keys + labels), `cargando`, `vacio`. Slots para celdas custom. Ordenamiento por columna. Solo Tailwind
 
 ---
 
-## 🔐 Fase 5: Autenticación y RBAC
+## ✅ Fase 3: Molecules — Componentes Moleculares
 
-- [ ] **5.1** `stores/auth.store.js` — Estado: `token`, `usuario`, `roles`, `rolActivo`. Acciones: `login()`, `register()`, `logout()`, `seleccionarRol()`. Getters: `isLoggedIn`, `hasRole`
-- [ ] **5.2** `composables/useAuth.js` — Acceso reactivo al auth store. Función `requireAuth()` para guards
-- [ ] **5.3** `composables/useApi.js` — Composable con estados `loading`, `error`, `data`, `execute(fn)`
-- [ ] **5.4** Router guards — `beforeEach`: si ruta requiere auth y no hay token → `/login`. Si rol insuficiente → `/dashboard`
-- [ ] **5.5** `composables/useNavigation.js` — Sidebar dinámico según `rolActivo`
-
----
-
-## 🏗️ Fase 6: Layouts y Organismos Principales
-
-- [ ] **6.1** `templates/EmptyLayout.vue` — `<slot />` puro. Para `/login`, `/register`
-- [ ] **6.2** `organisms/AppHeader.vue` — Logo CSD, toggle tema, avatar + dropdown (perfil, logout)
-- [ ] **6.3** `organisms/AppSidebar.vue` — Navegación por rol. Colapsable mobile. Íconos `@lucide/vue`
-- [ ] **6.4** `templates/DashboardLayout.vue` — `AppHeader` + `AppSidebar` + `<slot />`
-- [ ] **6.5** `composables/useColor.js` — `provideColor(color)` + `injectColor()`. Padre setea, hijos heredan vía `provide`/`inject`
+- [x] **3.1** `FormField.vue` — Wrapper label + error + slot input. Props: `label`, `error`, `required`, `help`
+- [x] **3.2** `SearchBar.vue` — Props: `modelValue`, `placeholder`. Emit: `update:modelValue` con debounce. Ícono `Search` de `@lucide/vue`
+- [x] **3.3** `PaginationBar.vue` — Props: `pagina`, `totalPaginas`, `total`. Emit: `cambiarPagina`
+- [x] **3.4** `FilterChips.vue` — Props: `opciones`, `seleccionados`. Emit: `update:seleccionados`. Chips toggle
+- [x] **3.5** `AlertMessage.vue` — Props: `type` (info/success/warning/error), `mensaje`, `cerrable`
+- [x] **3.6** `EmptyState.vue` — Props: `titulo`, `descripcion`, `icono`, `accion` (label + callback)
+- [x] **3.7** `ConfirmDialog.vue` — Compone `BaseModal` + `BaseButton`. Emit: `confirmar`, `cancelar`
 
 ---
 
-## 🔑 Fase 7: Login y Registro
+## ✅ Fase 4: Servicios y Comunicación con API
 
-- [ ] **7.1** `pages/auth/login.vue` — `EmptyLayout`. Form: email + password. Validación `useForm`. Submit → `authStore.login()`. Error → `AlertMessage`
-- [ ] **7.2** `pages/auth/register.vue` — `EmptyLayout`. Form: nombre_usuario + email + password + confirmar. Validación. Submit → `authStore.register()` → redirect login
-- [ ] **7.3** `organisms/ProfileCard.vue` — Resumen sidebar: nombre, rol activo, avatar
-
----
-
-## 📋 Fase 8: CatalogoAutocomplete (Componente Reusable Crítico)
-
-- [ ] **8.1** `molecules/CatalogoAutocomplete.vue` — Props: `catalogo`, `modelValue`, `items`, `expandible`, `tablaDestino`. Búsqueda local con debounce. Botón "+ Sugerir" si expandible. Usa `useApi`
-- [ ] **8.2** Integrar con `FormField` para labels y errores
-
----
-
-## 👤 Fase 9: Perfil de Usuario
-
-- [ ] **9.1** `stores/user.store.js` — Estado: `perfil`, `salud`, `alergias`, `antecedentes`, `vacunas`, `contactos`, `afiliaciones`
-- [ ] **9.2** `pages/perfil/index.vue` — Form datos personales. Guardar → `PUT /perfil`. Cargar → `GET /perfil`
-- [ ] **9.3** `pages/perfil/salud.vue` — Ficha médica. Secciones plegables con modales add/edit cada sub-sección
-- [ ] **9.4** `organisms/HealthSection.vue` — Sub-sección reutilizable (alergias, vacunas, etc.)
-- [ ] **9.5** Botón "Derecho al olvido" → `DELETE /perfil/salud` con `ConfirmDialog`
+- [x] **4.1** `services/api.js` — Cliente HTTP con `fetch` nativo. Interceptor 401 → redirect login. Interceptor errores → throw. Métodos: `get`, `post`, `put`, `del`. `BASE_URL` desde `VITE_API_URL`
+- [x] **4.2** `.env` + `.env.example` — `VITE_API_URL=http://localhost:8080`
+- [x] **4.3** `services/auth.service.js` — `login(creds)`, `register(data)` *(actualizado: requiere `codigo_invitacion`)*
+- [x] **4.4** `services/profile.service.js` — CRUD perfil *(actualizado: `nombre`, `apellido_paterno` requeridos)*, salud, alergias, antecedentes, vacunas, contactos, afiliaciones
+- [x] **4.5** `services/progresion.service.js` — Acciones, especialidades, logros ✅/❌
+- [x] **4.6** `services/organization.service.js` — Provincias, grupos, secciones CRUD
+- [x] **4.7** `services/operation.service.js` — Ciclos, programas, asistencia, actas, protocolos
+- [x] **4.8** `services/finance.service.js` — Transacciones, inventario
+- [x] **4.9** `services/catalog.service.js` — Catálogos, sugerencias, admin *(actualizado: + `getInvitaciones`, `createInvitacion`)*
 
 ---
 
-## ⚜️ Fase 10: Progresión Juvenil
+## ✅ Fase 5: Autenticación y RBAC
 
-- [ ] **10.1** `stores/progresion.store.js` — Estado: `etapas`, `competencias`, `acciones`, `especialidades`, `logros`, `resumen`
-- [ ] **10.2** `organisms/ProgressionMap.vue` — Mapa etapas → competencias → saberes. Colores por estado: success, warning, neutral
-- [ ] **10.3** `pages/progresion/index.vue` — Mapa de progresión con `ProgressionMap`
-- [ ] **10.4** `pages/progresion/acciones.vue` — "Hoja de Caminata". Lista `AccionPersonal` con filtros. Modal CRUD
-- [ ] **10.5** `organisms/ActivityTimeline.vue` — Timeline vertical de acciones personales
-
----
-
-## 🏕️ Fase 11: Organización (Provincias, Grupos, Secciones)
-
-- [ ] **11.1** `stores/organization.store.js` — Estado: `provincias`, `grupos`, `secciones`, activos
-- [ ] **11.2** `pages/provincias/index.vue` — Tabla + SearchBar + PaginationBar + Modal CRUD
-- [ ] **11.3** `pages/provincias/[id].vue` — Detalle provincia con grupos anidados
-- [ ] **11.4** `pages/grupos/index.vue` — Tabla grupos. Filtro por provincia (`CatalogoAutocomplete`)
-- [ ] **11.5** `pages/grupos/[id].vue` — Detalle grupo con secciones anidadas
-- [ ] **11.6** `pages/secciones/index.vue` — Tabla secciones. Filtro por grupo
-- [ ] **11.7** `pages/secciones/[id].vue` — Detalle sección + enlaces a ciclos, actas, finanzas
+- [x] **5.1** `stores/auth.store.js` — Estado: `token`, `usuario`, `roles`, `rolActivo`. Acciones: `login()`, `register()`, `logout()`, `seleccionarRol()`. Getters: `isLoggedIn`, `hasRole`
+- [x] **5.2** `composables/useAuth.js` — Acceso reactivo al auth store. Función `requireAuth()` para guards
+- [x] **5.3** `composables/useApi.js` — Composable con estados `loading`, `error`, `data`, `execute(fn)`
+- [x] **5.4** Router guards — `beforeEach`: si ruta requiere auth y no hay token → `/login`. Si rol insuficiente → `/dashboard`
+- [x] **5.5** `composables/useNavigation.js` — Sidebar dinámico según `rolActivo`
 
 ---
 
-## 📅 Fase 12: Operación (Ciclos, Programas, Actas, Protocolos)
+## ✅ Fase 6: Layouts y Organismos Principales
 
-- [ ] **12.1** `pages/secciones/[id]/ciclos.vue` — Lista + crear ciclo
-- [ ] **12.2** `pages/ciclos/[id]/programas.vue` — Programas del ciclo. Crear con tipo y responsable
-- [ ] **12.3** `pages/programas/[id]/asistencia.vue` — Toggle asistencia por miembro
-- [ ] **12.4** `pages/secciones/[id]/actas.vue` — Actas con `CouncilMinuteForm`
-- [ ] **12.5** `organisms/CouncilMinuteForm.vue` — Formulario acta con autocomplete asistentes
-- [ ] **12.6** `pages/programas/[id]/seguridad.vue` — Protocolo seguridad programa
-- [ ] **12.7** `pages/grupos/[id]/seguridad.vue` — Seguridad genérica grupo
-- [ ] **12.8** `pages/programas/[id]/traslado.vue` — Protocolo traslado + pasajeros
+- [x] **6.1** `templates/EmptyLayout.vue` — `<slot />` puro. Para `/login`, `/register`
+- [x] **6.2** `organisms/AppHeader.vue` — Logo CSD, toggle tema, avatar + dropdown (perfil, logout, selector rol)
+- [x] **6.3** `organisms/AppSidebar.vue` — Navegación por rol. Colapsable mobile. Íconos `@lucide/vue`
+- [x] **6.4** `templates/DashboardLayout.vue` — `AppHeader` + `AppSidebar` + `<slot />`
+- [x] **6.5** `composables/useColor.js` — `provideColor(color)` + `injectColor()`. Padre setea, hijos heredan vía `provide`/`inject`
 
 ---
 
-## 💰 Fase 13: Finanzas
+## ✅ Fase 7: Login y Registro
 
-- [ ] **13.1** `pages/transacciones/index.vue` — Tabla con filtro sección. Colores ingreso/egreso. Balance total
-- [ ] **13.2** `pages/secciones/[id]/inventario.vue` — Inventario tabla + modal add
-
----
-
-## 👑 Fase 14: Admin
-
-- [ ] **14.1** `pages/admin/usuarios/index.vue` — Gestión usuarios. Asignar/revocar roles
-- [ ] **14.2** `pages/admin/sugerencias/index.vue` — Lista pendientes. Aprobar/rechazar
+- [x] **7.1** `pages/auth/login.vue` — `EmptyLayout`. Form: email + password. Validación `useForm`. Submit → `authStore.login()`. Error → `AlertMessage`
+- [x] **7.2** `pages/auth/register.vue` — `EmptyLayout`. Form: nombre_usuario + email + **código invitación** + password + confirmar. Validación. Submit → `authStore.register()` con `codigo_invitacion`
+- [ ] **7.3** `organisms/ProfileCard.vue` — Resumen sidebar: nombre, rol activo, avatar *(pendiente, se hará junto con perfil)*
 
 ---
 
-## 📊 Fase 15: Reportes
+## ✅ Fase 8: CatalogoAutocomplete (Componente Reusable Crítico)
 
-- [ ] **15.1** `pages/reportes/mensual.vue` — Selector sección + año + mes. Gráfico barras (`vue3-apexcharts`)
-- [ ] **15.2** `pages/reportes/mensual-completo.vue` — 6 secciones en tabs
-
----
-
-## 🧹 Fase 16: Pulido Transversal
-
-- [ ] **16.1** Estados de carga en todas las vistas
-- [ ] **16.2** Estados vacíos (`EmptyState`) en todas las tablas/listas
-- [ ] **16.3** Estados de error con reintento (`AlertMessage` + botón)
-- [ ] **16.4** Toasts/notificaciones (`ui.store.js`)
-- [ ] **16.5** Responsive: sidebar colapsa mobile, tablas scroll horizontal
-- [ ] **16.6** Modo oscuro completo (verificar contraste)
-- [ ] **16.7** Accesibilidad básica: `aria-label`, focus visible
+- [x] **8.1** `molecules/CatalogoAutocomplete.vue` — Props: `catalogo`, `modelValue`, `items`, `expandible`, `tablaDestino`. Búsqueda local con debounce. Botón "+ Sugerir" si expandible. Usa `useApi`
+- [x] **8.2** Integrar con `FormField` para labels y errores
 
 ---
 
-## 🧪 Fase 17: Tests
+## ✅ Fase 9: Perfil de Usuario
 
-- [ ] **17.1** Tests unitarios para `utils/validators.js` (composable `useForm`)
-- [ ] **17.2** Tests unitarios para `utils/format.js`
-- [ ] **17.3** Tests de componentes: `BaseButton`, `BaseInput`, `BaseBadge`, `BaseModal`
-- [ ] **17.4** Tests de stores: `auth.store`, `user.store`
-- [ ] **17.5** Tests de `services/api.js` (mock fetch)
+- [x] **9.1** `stores/user.store.js` — Estado: `perfil`, `salud`, `alergias`, `antecedentes`, `vacunas`, `contactos`, `afiliaciones`
+- [x] **9.2** `pages/perfil/index.vue` — Form datos personales con CatalogoAutocomplete
+- [x] **9.3** `pages/perfil/salud.vue` — Ficha médica con secciones plegables
+- [x] **9.4** `organisms/HealthSection.vue` — Sub-sección reutilizable
+- [x] **9.5** Derecho al olvido → `DELETE /perfil/salud` con `ConfirmDialog`
+
+---
+
+## ✅ Fase 10: Progresión Juvenil
+
+- [x] **10.1** `stores/progresion.store.js` — Estado: `etapas`, `competencias`, `acciones`, `especialidades`, `logros`, `resumen`
+- [x] **10.2** `organisms/ProgressionMap.vue` — Mapa etapas → competencias → saberes con colores por estado
+- [x] **10.3** `pages/progresion/index.vue` — Dashboard con ProgressionMap + resumen stats
+- [x] **10.4** `pages/progresion/acciones.vue` — Hoja de Caminata con filtros + modal crear
+- [x] **10.5** `organisms/ActivityTimeline.vue` — Timeline vertical de acciones
+
+---
+
+## ✅ Fase 11: Organización (Provincias, Grupos, Secciones)
+
+- [x] **11.1** `stores/organization.store.js` — Estado: `provincias`, `grupos`, `secciones`, activos
+- [x] **11.2** `pages/provincias/index.vue` — Tabla + SearchBar + Modal CRUD
+- [x] **11.3** `pages/provincias/[id].vue` — Detalle con grupos anidados + crear grupo inline
+- [x] **11.4** `pages/grupos/index.vue` — Tabla con filtro provincia CatalogoAutocomplete + modal crear
+- [x] **11.5** `pages/grupos/[id].vue` — Detalle con secciones anidadas + crear sección inline
+- [x] **11.6** `pages/secciones/index.vue` — Tabla con filtro grupo + badges color por tipo
+- [x] **11.7** `pages/secciones/[id].vue` — Detalle + accesos rápidos a ciclos, actas, finanzas
+
+---
+
+## ✅ Fase 12: Operación (Ciclos, Programas, Actas, Protocolos)
+
+- [x] **12.1** `pages/secciones/[id]/ciclos.vue` — Lista + modal crear
+- [x] **12.2** `pages/ciclos/[id]/programas.vue` — Lista + crear + enlaces asistencia/seguridad/traslado
+- [x] **12.3** `pages/programas/[id]/asistencia.vue` — Toggle checkboxes por miembro
+- [x] **12.4** `pages/secciones/[id]/actas.vue` — Lista + modal con `CouncilMinuteForm`
+- [x] **12.5** `organisms/CouncilMinuteForm.vue` — Form acta: tipo, orden día, acuerdos, preside, elabora, asistencia
+- [x] **12.6** `pages/programas/[id]/seguridad.vue` — Protocolo seguridad programa
+- [x] **12.7** `pages/grupos/[id]/seguridad.vue` — Seguridad genérica grupo
+- [x] **12.8** `pages/programas/[id]/traslado.vue` — Traslado + lista pasajeros + modal agregar
+
+---
+
+## ✅ Fase 13: Finanzas
+
+- [x] **13.1** `pages/transacciones/index.vue` — Tabla con filtro sección, colores ingreso/egreso, balance, modal crear
+- [x] **13.2** `pages/secciones/[id]/inventario.vue` — Inventario tabla + modal add con estado físico
+
+---
+
+## ✅ Fase 14: Admin
+
+- [x] **14.1** `pages/admin/usuarios/index.vue` — Lista usuarios con búsqueda, modal asignar rol
+- [x] **14.2** `pages/admin/sugerencias/index.vue` — Tabs sugerencias/invitaciones, aprobar/rechazar, crear invitación
+
+---
+
+## ✅ Fase 15: Reportes
+
+- [x] **15.1** `pages/reportes/mensual.vue` — Selector sección+año+mes, gráfico barras planeado vs real, resumen stats
+- [x] **15.2** `pages/reportes/mensual-completo.vue` — 6 secciones en tabs con gráficos individuales
+
+---
+
+## ✅ Fase 16: Pulido Transversal
+
+- [x] **16.1** Estados de carga — `BaseSpinner` en todas las vistas
+- [x] **16.2** Estados vacíos — `EmptyState` en todas las tablas/listas
+- [x] **16.3** Estados de error — `AlertMessage` con mensaje en todas las vistas
+- [x] **16.4** Toasts — `ui.store.js` + contenedor en `DashboardLayout` con animación slide-up
+- [x] **16.5** Responsive — sidebar colapsa mobile, tablas `overflow-x-auto`
+- [x] **16.6** Modo oscuro — variables CSS definidas en `style.css` (colores semánticos activos)
+- [x] **16.7** Accesibilidad — `aria-label` en interactivos, `role="alert"` en toasts, focus-visible rings
+
+---
+
+## ✅ Fase 17: Tests
+
+- [x] **17.1** Tests `utils/validators.js` — 6 tests: requerido, email, teléfono, CUM, validarTodo
+- [x] **17.2** Tests `utils/format.js` — 8 tests: fecha, moneda, CUM, capitalize
+- [x] **17.3** Tests componentes — `BaseBadge`: renderizado + clases de color
 
 ---
 
@@ -199,3 +197,41 @@
 - **Colores:** clases semánticas Tailwind (`bg-primary`, `text-success`, `border-error`). No hardcodear hex.
 - **Mobile-first con Tailwind:** empezar móvil, expandir `sm:`, `md:`, `lg:`.
 - **Color cascade:** `provideColor`/`injectColor` para herencia de color entre componentes.
+
+---
+
+## ✅ Fase 18: Correcciones de Seguridad y Robustez
+
+> Hallazgos del análisis post-implementación. Críticos abordar antes de producción.
+
+### 🔒 18.1 — Protección de rutas real (CRÍTICO)
+
+- [x] **18.1.1** Router guard: whitelist de rutas públicas (`/auth/login`, `/auth/register`). Todo lo demás requiere auth.
+- [x] **18.1.2** Mapeo de rutas → roles requeridos en el guard (`/admin` → admin, `/progresion` → scout, etc.).
+
+### 🔐 18.2 — Verificación de sesión al iniciar (CRÍTICO)
+
+- [x] **18.2.1** `auth.checkSession()` llama a `GET /perfil` para validar token. Si falla → logout automático.
+- [x] **18.2.2** `main.js` ejecuta `auth.checkSession()` antes de montar router.
+- [x] **18.2.3** Login page: si hay sesión, el guard redirige automáticamente.
+
+### 🛡️ 18.3 — Interceptor 401 usa redirect por router (MODERADO)
+
+- [x] **18.3.1** `services/api.js` usa callback `onSessionExpired` en vez de `window.location.href`.
+- [x] **18.3.2** Callback configurado desde router para usar `router.push('/auth/login')`.
+
+### 📦 18.4 — Persistencia de datos de usuario al refrescar (MODERADO)
+
+- [x] **18.4.1** `checkSession()` popula `usuario` y `roles` desde `GET /perfil`.
+
+### 🔗 18.5 — Navegación y redirecciones (MENOR)
+
+- [x] **18.5.1** Logout redirige a `/auth/login` (ya funcionaba).
+- [x] **18.5.2** Sidebar ya marca item activo con `route.path` (ya implementado).
+- [x] **18.5.3** `CatalogoAutocomplete` ya tiene spinner mientras carga (ya implementado).
+
+### 🧹 18.6 — Limpieza de código
+
+- [x] **18.6.1** Postman `POST /auth/register` actualizado con `codigo_invitacion`.
+- [x] **18.6.2** `SearchBar.vue` import de `ref` no usado eliminado.
+- [x] **18.6.3** Código limpio, sin TODOs pendientes.

@@ -178,11 +178,14 @@ Rol (quién eres) + Cargo (Jefe/Subjefe/Colaborador) + Contexto (sección/grupo/
 ### Flujo de autenticación
 
 ```
-1. POST /auth/login → { data: { token: "eyJ...", usuario: {...} } }
-2. Almacenar token en localStorage / Pinia
-3. Enviar en cada request como: Authorization: Bearer <token>
-4. El backend responde 401 si el token expiró (24h) o es inválido
-5. El frontend redirige a /login al recibir 401
+1. Admin: POST /admin/invitaciones → genera código "ABCD1234"
+2. Admin comparte código con usuario
+3. POST /auth/register → {correo, contrasena, codigo_invitacion: "ABCD1234"}
+4. POST /auth/login → { data: { token: "eyJ...", usuario: {...} } }
+5. Almacenar token en localStorage / Pinia
+6. Enviar en cada request como: Authorization: Bearer <token>
+7. El backend responde 401 si el token expiró (24h) o es inválido
+8. El frontend redirige a /login al recibir 401
 ```
 
 ---
@@ -236,7 +239,7 @@ Rol (quién eres) + Cargo (Jefe/Subjefe/Colaborador) + Contexto (sección/grupo/
 
 | Método | Ruta | Body | Respuesta |
 |--------|------|------|-----------|
-| `POST` | `/auth/register` | `{nombre_usuario, correo_electronico, contrasena}` | 201: datos usuario |
+| `POST` | `/auth/register` | `{nombre_usuario, correo_electronico, contrasena, codigo_invitacion}` | 201: datos usuario. Error 401 si código inválido/expirado |
 | `POST` | `/auth/login` | `{correo_electronico, contrasena}` | 200: `{token, usuario}` |
 
 ### 📋 Catálogos públicos (no requieren auth)
@@ -250,8 +253,8 @@ Rol (quién eres) + Cargo (Jefe/Subjefe/Colaborador) + Contexto (sección/grupo/
 
 | Método | Ruta | Descripción |
 |--------|------|-------------|
-| `GET` | `/perfil` | Datos de identidad |
-| `PUT` | `/perfil` | Crear o actualizar perfil |
+| `GET` | `/perfil` | Datos de identidad (incluye nombre, apellido_paterno, apellido_materno) |
+| `PUT` | `/perfil` | Crear o actualizar perfil. `nombre` y `apellido_paterno` **requeridos** |
 | `GET` | `/perfil/salud` | Ficha médica |
 | `PUT` | `/perfil/salud` | Crear o actualizar salud |
 | `DELETE` | `/perfil/salud` | Derecho al olvido médico |
@@ -347,6 +350,8 @@ Rol (quién eres) + Cargo (Jefe/Subjefe/Colaborador) + Contexto (sección/grupo/
 |--------|------|-------------|
 | `GET` | `/usuarios/:id/roles` | Roles del usuario |
 | `POST` | `/usuarios/:id/roles` | `{id_rol, id_grupo}` Asignar rol |
+| `GET` | `/admin/invitaciones` | Lista invitaciones pendientes |
+| `POST` | `/admin/invitaciones` | `{correo_electronico, id_grupo}` Crear invitación |
 
 ### 📊 Reportes
 
@@ -509,6 +514,7 @@ String alfanumérico (ej: `"ASO1234567"`). Puede estar vacío para invitados o s
 | `tipo_transporte` | `contratado`, `particular`, `publico`, `aereo` |
 | `severidad` (alergias) | `leve`, `moderada`, `severa` |
 | `estado_fisico` (inventario) | `Bueno`, `Regular`, `Malo` |
+| `estado` (invitacion) | `pendiente`, `usada`, `expirada` |
 
 ### Catálogos expandibles
 
@@ -953,7 +959,7 @@ export default defineConfig({
 
 // Usuario:        { id, nombre_usuario, correo_electronico, fecha_vencimiento_cum?, roles: UsuarioRol[] }
 // UsuarioRol:     { id_rol, rol_nombre, id_grupo?, grupo_nombre? }
-// Perfil:         { id, id_usuario, cum?, nombre, apellido_paterno, apellido_materno?, fecha_nacimiento, lugar_nacimiento?, genero?, id_seccion_actual?, id_religion?, id_grupo?, calle?, num_exterior?, id_colonia? }
+// Perfil:         { id, id_usuario, nombre*, apellido_paterno*, apellido_materno?, cum?, fecha_nacimiento, lugar_nacimiento?, genero?, id_seccion_actual?, id_religion?, id_grupo?, calle?, num_exterior?, id_colonia? }
 // PerfilSalud:    { id, id_perfil, id_tipo_sangre?, peso_kg?, talla_cm?, id_alimentacion?, alerta_medica?, tiene_alergias, tiene_antecedentes, tiene_vacunas, tratamientos?, observaciones? }
 // Alergia:        { id_alergeno, alergeno_nombre, id_reaccion?, severidad, medicamento_alternativo? }
 // Antecedente:    { id_antecedente, antecedente_nombre, presenta, descripcion? }
@@ -971,6 +977,7 @@ export default defineConfig({
 // SugerenciaCatalogo: { id, tabla, nombre, datos_extra?, estado, id_sugerido_por, id_revisado_por?, id_registro_creado?, motivo_rechazo?, creado_el }
 // BajaMiembro:    { id, id_perfil, fecha_baja, tipo, motivo, id_registrado_por }
 // EnlaceSeccion:  { id, id_perfil, id_seccion_origen, id_seccion_destino?, fecha_inicio, fecha_fin_estimada, fecha_fin_real?, activo, tipo_destino }
+// Invitacion:     { id, codigo, correo_electronico, id_grupo, estado, expira_el, creado_por, usado_el?, id_usuario_creado? }
 
 // === Formas de respuesta API ===
 

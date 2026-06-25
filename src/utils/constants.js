@@ -111,6 +111,12 @@ export const TIPO_GRUPO = Object.freeze({
   SIN_GRUPO: 'sin_grupo',
 })
 
+export const ESTADO_INVITACION = Object.freeze({
+  PENDIENTE: 'pendiente',
+  USADA: 'usada',
+  EXPIRADA: 'expirada',
+})
+
 /**
  * Catálogos expandibles (aceptan sugerencias de usuario).
  */

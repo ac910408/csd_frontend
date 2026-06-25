@@ -54,7 +54,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\"nombre_usuario\":\"nuevo\",\"correo_electronico\":\"nuevo@csd.local\",\"contrasena\":\"Test123!\"}"
+              "raw": "{\"nombre_usuario\":\"nuevo\",\"correo_electronico\":\"nuevo@csd.local\",\"contrasena\":\"Test123!\",\"codigo_invitacion\":\"ABCD1234\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/auth/register",
@@ -278,7 +278,7 @@
             "header": [{ "key": "Content-Type", "value": "application/json" }],
             "body": {
               "mode": "raw",
-              "raw": "{\"fecha_nacimiento\":\"2010-05-15T00:00:00Z\",\"lugar_nacimiento\":\"Oaxaca\",\"id_grupo\":1}"
+              "raw": "{\"nombre\":\"Ana\",\"apellido_paterno\":\"García\",\"apellido_materno\":\"López\",\"fecha_nacimiento\":\"2010-05-15T00:00:00Z\",\"lugar_nacimiento\":\"Oaxaca\",\"id_grupo\":1}"
             },
             "url": {
               "raw": "{{baseUrl}}/perfil",
@@ -926,6 +926,38 @@
               "raw": "{{baseUrl}}/admin/sugerencias/1/resolver",
               "host": ["{{baseUrl}}"],
               "path": ["admin", "sugerencias", "1", "resolver"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "🎫 Invitaciones",
+      "item": [
+        {
+          "name": "POST /admin/invitaciones",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"correo_electronico\":\"invitado@email.com\",\"id_grupo\":1}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/admin/invitaciones",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "invitaciones"]
+            }
+          }
+        },
+        {
+          "name": "GET /admin/invitaciones",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/admin/invitaciones",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "invitaciones"]
             }
           }
         }
