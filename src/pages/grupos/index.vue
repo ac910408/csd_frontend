@@ -12,7 +12,7 @@
         <FormField label="Filtrar por provincia">
           <CatalogoAutocomplete
             v-model="filtroProvincia"
-            catalogo="provincias"
+            catalogo="provincias" endpoint="/provincias"
             :items="[]"
             placeholder="Todas las provincias"
           />
@@ -41,7 +41,7 @@
           <FormField label="Provincia" required>
             <CatalogoAutocomplete
               v-model="form.id_provincia"
-              catalogo="provincias"
+              catalogo="provincias" endpoint="/provincias"
               :items="[]"
               placeholder="Seleccionar provincia…"
             />

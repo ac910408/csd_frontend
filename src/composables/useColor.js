@@ -15,6 +15,15 @@ const COLOR_VARIANTS = [
   'warning',
   'error',
   'neutral',
+  // Colores de identidad (válidos como bg/text en componentes)
+  'mundial',
+  'clan',
+  'comunidad',
+  'grupo',
+  'manada',
+  'nacional',
+  'scouters',
+  'tropa',
 ]
 
 /**

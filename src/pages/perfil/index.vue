@@ -93,7 +93,7 @@
             <FormField label="Grupo">
               <CatalogoAutocomplete
                 v-model="form.id_grupo"
-                catalogo="grupos"
+                catalogo="grupos" endpoint="/grupos"
                 :items="[]"
                 placeholder="Buscar grupo…"
               />

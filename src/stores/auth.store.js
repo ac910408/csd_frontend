@@ -1,6 +1,7 @@
 /**
  * Store de autenticación JWT.
  * Maneja token, usuario, roles y rol activo.
+ * roles es un array de strings: ["admin", "scouter"], NO objetos.
  */
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
@@ -9,8 +10,8 @@ import { api } from '@/services/api'
 
 export const useAuthStore = defineStore('auth', () => {
   const token = ref(localStorage.getItem('csd-token') || null)
-  const usuario = ref(null)
-  const roles = ref([])
+  const usuario = ref(JSON.parse(localStorage.getItem('csd-usuario') || 'null'))
+  const roles = ref(JSON.parse(localStorage.getItem('csd-roles') || '[]'))
   const rolActivo = ref(localStorage.getItem('csd-rol-activo') || null)
   const sessionChecked = ref(false)
 
@@ -18,15 +19,13 @@ export const useAuthStore = defineStore('auth', () => {
   const isLoggedIn = computed(() => !!token.value)
 
   const rolesDisponibles = computed(() =>
-    roles.value.map((r) => ({
-      rol: r.rol_nombre,
-      grupoId: r.id_grupo,
-      grupoNombre: r.grupo_nombre,
+    roles.value.map((nombreRol) => ({
+      rol: nombreRol,
     })),
   )
 
   function hasRole(rol) {
-    return roles.value.some((r) => r.rol_nombre === rol)
+    return roles.value.includes(rol)
   }
 
   function hasAnyRole(requiredRoles) {
@@ -43,6 +42,11 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
+  function setRoles(r) {
+    roles.value = r
+    localStorage.setItem('csd-roles', JSON.stringify(r))
+  }
+
   function setRolActivo(rol) {
     rolActivo.value = rol
     localStorage.setItem('csd-rol-activo', rol)
@@ -52,11 +56,19 @@ export const useAuthStore = defineStore('auth', () => {
     const res = await authService.login(creds)
     setToken(res.data.token)
     usuario.value = res.data.usuario
-    roles.value = res.data.usuario?.roles || []
+    localStorage.setItem('csd-usuario', JSON.stringify(res.data.usuario))
+    setRoles(res.data.roles || [])
 
     // Si solo tiene un rol, seleccionarlo automáticamente
     if (roles.value.length === 1) {
-      setRolActivo(roles.value[0].rol_nombre)
+      setRolActivo(roles.value[0])
+    } else if (roles.value.length > 1) {
+      // Múltiples roles: preferir admin, luego el primero
+      if (roles.value.includes('admin')) {
+        setRolActivo('admin')
+      } else {
+        setRolActivo(roles.value[0])
+      }
     }
 
     return res
@@ -67,7 +79,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function seleccionarRol(rol) {
-    if (hasRole(rol)) {
+    if (roles.value.includes(rol)) {
       setRolActivo(rol)
     }
   }
@@ -75,10 +87,11 @@ export const useAuthStore = defineStore('auth', () => {
   function logout() {
     setToken(null)
     usuario.value = null
-    roles.value = []
+    setRoles([])
     rolActivo.value = null
     sessionChecked.value = false
     localStorage.removeItem('csd-rol-activo')
+    localStorage.removeItem('csd-usuario')
   }
 
   /** Verifica que el token actual sea válido contra el backend */
@@ -88,18 +101,21 @@ export const useAuthStore = defineStore('auth', () => {
       return false
     }
     try {
-      const res = await api.get('/perfil')
-      usuario.value = res.data?.usuario || res.data
-      roles.value = usuario.value?.roles || []
-      if (roles.value.length === 1 && !rolActivo.value) {
-        setRolActivo(roles.value[0].rol_nombre)
-      }
+      // GET /perfil solo para validar que el token sigue activo
+      // 404 = token válido pero perfil no creado aún (no es error de sesión)
+      await api.get('/perfil')
       sessionChecked.value = true
       return true
-    } catch {
-      logout()
+    } catch (e) {
+      // Solo logout si es error de autenticación (401)
+      if (e?.codigo === 'SESSION_EXPIRED') {
+        logout()
+        sessionChecked.value = true
+        return false
+      }
+      // 404, 500, etc: token válido, sesión ok
       sessionChecked.value = true
-      return false
+      return true
     }
   }
 

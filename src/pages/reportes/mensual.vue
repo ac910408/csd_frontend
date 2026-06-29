@@ -6,7 +6,7 @@
       <BaseCard class="mb-6">
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <FormField label="Sección" required>
-            <CatalogoAutocomplete v-model="seccionId" catalogo="secciones" :items="[]" placeholder="Seleccionar…" />
+            <CatalogoAutocomplete v-model="seccionId" catalogo="secciones" endpoint="/secciones" :items="[]" placeholder="Seleccionar…" />
           </FormField>
           <FormField label="Año">
             <BaseInput v-model.number="anio" type="number" placeholder="2025" />

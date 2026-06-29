@@ -29,10 +29,7 @@
         @mouseenter="highlightIndex = i"
       >
         <span class="truncate">{{ item.nombre }}</span>
-        <CircleCheck
-          v-if="modelValue === item.id"
-          class="w-4 h-4 text-success flex-shrink-0"
-        />
+        <CircleCheck v-if="modelValue === item.id" class="w-4 h-4 text-success flex-shrink-0" />
       </button>
 
       <!-- Opción sugerir -->
@@ -57,6 +54,7 @@ import { ref, computed, watch, onMounted } from 'vue'
 import { Plus, CircleCheck } from '@lucide/vue'
 import { injectColor, COLOR_VARIANTS } from '@/composables/useColor'
 import { catalogService } from '@/services/catalog.service'
+import { api } from '@/services/api'
 
 const props = defineProps({
   catalogo: { type: String, required: true },
@@ -64,6 +62,7 @@ const props = defineProps({
   items: { type: Array, default: () => [] },
   expandible: { type: Boolean, default: false },
   tablaDestino: { type: String, default: '' },
+  endpoint: { type: String, default: '' },
   placeholder: { type: String, default: 'Buscar…' },
   disabled: { type: Boolean, default: false },
   color: {
@@ -83,22 +82,16 @@ const highlightIndex = ref(0)
 const loadingItems = ref(false)
 const fetchedItems = ref([])
 
-const allItems = computed(() =>
-  props.items.length ? props.items : fetchedItems.value,
-)
+const allItems = computed(() => (props.items.length ? props.items : fetchedItems.value))
 
 const filteredItems = computed(() => {
   if (!searchText.value) return allItems.value.slice(0, 20)
   const q = searchText.value.toLowerCase()
-  return allItems.value
-    .filter((it) => it.nombre.toLowerCase().includes(q))
-    .slice(0, 20)
+  return allItems.value.filter((it) => it.nombre.toLowerCase().includes(q)).slice(0, 20)
 })
 
 const exactMatch = computed(() =>
-  filteredItems.value.some(
-    (it) => it.nombre.toLowerCase() === searchText.value.toLowerCase(),
-  ),
+  filteredItems.value.some((it) => it.nombre.toLowerCase() === searchText.value.toLowerCase()),
 )
 
 const selectedLabel = computed(() => {
@@ -134,10 +127,7 @@ function onBlur() {
 
 // ── Navegación teclado ────────────────────────────────────
 function moveDown() {
-  highlightIndex.value = Math.min(
-    highlightIndex.value + 1,
-    filteredItems.value.length - 1,
-  )
+  highlightIndex.value = Math.min(highlightIndex.value + 1, filteredItems.value.length - 1)
 }
 
 function moveUp() {
@@ -176,7 +166,12 @@ async function loadCatalog() {
   if (props.items.length) return
   loadingItems.value = true
   try {
-    const res = await catalogService.getCatalogo(props.catalogo)
+    let res
+    if (props.endpoint) {
+      res = await api.get(props.endpoint)
+    } else {
+      res = await catalogService.getCatalogo(props.catalogo)
+    }
     fetchedItems.value = res.data || []
   } catch {
     fetchedItems.value = []

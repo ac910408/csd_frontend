@@ -12,6 +12,10 @@
       </select>
     </FormField>
 
+    <FormField label="Fecha" required>
+      <BaseInput v-model="form.fecha" type="datetime-local" />
+    </FormField>
+
     <FormField label="Orden del día" required>
       <textarea
         v-model="form.orden_del_dia"
@@ -51,16 +55,8 @@
 
     <FormField label="Asistencia">
       <div class="space-y-2 max-h-40 overflow-y-auto border border-base-200 rounded-lg p-3">
-        <label
-          v-for="m in miembros"
-          :key="m.id_perfil"
-          class="flex items-center gap-2 text-sm"
-        >
-          <input
-            v-model="asistencia[m.id_perfil]"
-            type="checkbox"
-            class="rounded"
-          />
+        <label v-for="m in miembros" :key="m.id_perfil" class="flex items-center gap-2 text-sm">
+          <input v-model="asistencia[m.id_perfil]" type="checkbox" class="rounded" />
           {{ m.nombre || `Perfil #${m.id_perfil}` }}
         </label>
         <p v-if="!miembros.length" class="text-xs text-neutral">Cargando miembros…</p>
@@ -69,7 +65,9 @@
 
     <div class="flex justify-end gap-3 pt-2">
       <BaseButton variant="ghost" size="sm" @click="$emit('cancelar')">Cancelar</BaseButton>
-      <BaseButton type="submit" variant="primary" size="sm" :loading="guardando">Guardar acta</BaseButton>
+      <BaseButton type="submit" variant="primary" size="sm" :loading="guardando"
+        >Guardar acta</BaseButton
+      >
     </div>
   </form>
 </template>
@@ -90,6 +88,7 @@ const asistencia = reactive({})
 
 const form = reactive({
   tipo_acta: 'ordinaria',
+  fecha: new Date().toISOString().slice(0, 16),
   orden_del_dia: '',
   acuerdos: '',
   id_preside: null,
@@ -99,7 +98,10 @@ const form = reactive({
 async function guardar() {
   guardando.value = true
   try {
-    const res = await operationService.createActa(props.seccionId, { ...form })
+    const res = await operationService.createActa(props.seccionId, {
+      ...form,
+      fecha: form.fecha ? new Date(form.fecha).toISOString() : undefined,
+    })
     // Registrar asistencia
     for (const [idPerfil, presente] of Object.entries(asistencia)) {
       if (presente) {
@@ -117,10 +119,8 @@ async function guardar() {
 
 onMounted(async () => {
   try {
-    // Cargar miembros de la sección
-    const res = await operationService.getActas(props.seccionId)
-    // Simplificado: el backend debería tener endpoint de miembros
-    miembros.value = []
+    const res = await operationService.getMiembros(props.seccionId)
+    miembros.value = res.data || []
   } catch {
     miembros.value = []
   }

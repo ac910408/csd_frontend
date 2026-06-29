@@ -31,7 +31,7 @@
               <CatalogoAutocomplete v-model="nuevoRol.id_rol" catalogo="roles" :items="[]" placeholder="Seleccionar rol…" />
             </FormField>
             <FormField label="Grupo (opcional)">
-              <CatalogoAutocomplete v-model="nuevoRol.id_grupo" catalogo="grupos" :items="[]" placeholder="Seleccionar grupo…" />
+              <CatalogoAutocomplete v-model="nuevoRol.id_grupo" catalogo="grupos" endpoint="/grupos" :items="[]" placeholder="Seleccionar grupo…" />
             </FormField>
             <div class="flex justify-end gap-3">
               <BaseButton variant="ghost" size="sm" @click="showRoles = false">Cancelar</BaseButton>

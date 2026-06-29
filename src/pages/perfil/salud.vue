@@ -48,10 +48,10 @@
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <FormField label="Peso (kg)">
-              <BaseInput v-model.number="basico.peso_kg" type="number" placeholder="70" />
+              <BaseInput v-model.number="basico.peso" type="number" placeholder="70" />
             </FormField>
             <FormField label="Talla (cm)">
-              <BaseInput v-model.number="basico.talla_cm" type="number" placeholder="170" />
+              <BaseInput v-model.number="basico.talla" type="number" placeholder="170" />
             </FormField>
           </div>
 
@@ -109,7 +109,12 @@
             <option value="moderada">Moderada</option>
             <option value="severa">Severa</option>
           </select>
-          <BaseButton type="submit" variant="primary" size="sm" :disabled="!nuevaAlergia.id_alergeno">
+          <BaseButton
+            type="submit"
+            variant="primary"
+            size="sm"
+            :disabled="!nuevaAlergia.id_alergeno"
+          >
             <Plus class="w-4 h-4" />
           </BaseButton>
         </form>
@@ -145,7 +150,12 @@
             <input v-model="nuevoAntecedente.presenta" type="checkbox" class="rounded" />
             Presenta
           </label>
-          <BaseButton type="submit" variant="primary" size="sm" :disabled="!nuevoAntecedente.id_antecedente">
+          <BaseButton
+            type="submit"
+            variant="primary"
+            size="sm"
+            :disabled="!nuevoAntecedente.id_antecedente"
+          >
             <Plus class="w-4 h-4" />
           </BaseButton>
         </form>
@@ -165,7 +175,11 @@
             </BaseBadge>
           </div>
         </div>
-        <EmptyState v-else titulo="Sin vacunas" descripcion="Registra vacunas aplicadas o padecidas" />
+        <EmptyState
+          v-else
+          titulo="Sin vacunas"
+          descripcion="Registra vacunas aplicadas o padecidas"
+        />
 
         <form class="flex gap-2 mt-4" @submit.prevent="agregarVacuna">
           <CatalogoAutocomplete
@@ -243,7 +257,6 @@ import { ref, reactive, onMounted } from 'vue'
 import { Plus, Trash2 } from '@lucide/vue'
 import { useUserStore } from '@/stores/user.store'
 
-
 const store = useUserStore()
 const cargando = ref(true)
 const error = ref('')
@@ -254,8 +267,8 @@ const guardandoBasico = ref(false)
 const basico = reactive({
   id_tipo_sangre: null,
   id_alimentacion: null,
-  peso_kg: null,
-  talla_cm: null,
+  peso: null,
+  talla: null,
   alerta_medica: '',
   tratamientos: '',
   observaciones: '',
@@ -277,8 +290,8 @@ async function cargar() {
       Object.assign(basico, {
         id_tipo_sangre: store.salud.id_tipo_sangre || null,
         id_alimentacion: store.salud.id_alimentacion || null,
-        peso_kg: store.salud.peso_kg || null,
-        talla_cm: store.salud.talla_cm || null,
+        peso: store.salud.peso || null,
+        talla: store.salud.talla || null,
         alerta_medica: store.salud.alerta_medica || '',
         tratamientos: store.salud.tratamientos || '',
         observaciones: store.salud.observaciones || '',

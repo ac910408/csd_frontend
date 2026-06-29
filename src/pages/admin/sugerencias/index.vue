@@ -77,7 +77,7 @@
               <BaseInput v-model="invForm.correo_electronico" type="email" placeholder="nuevo@scout.com" />
             </FormField>
             <FormField label="Grupo" required>
-              <CatalogoAutocomplete v-model="invForm.id_grupo" catalogo="grupos" :items="[]" placeholder="Seleccionar grupo…" />
+              <CatalogoAutocomplete v-model="invForm.id_grupo" catalogo="grupos" endpoint="/grupos" :items="[]" placeholder="Seleccionar grupo…" />
             </FormField>
             <div class="flex justify-end gap-3">
               <BaseButton variant="ghost" size="sm" @click="showCreate = false">Cancelar</BaseButton>

@@ -1,7 +1,10 @@
 <template>
   <DashboardLayout>
     <div class="max-w-3xl mx-auto">
-      <a :href="`/ciclos/${programa?.id_ciclo}/programas`" class="text-sm text-primary hover:underline mb-4 inline-block">
+      <a
+        :href="`/ciclos/${programa?.id_ciclo}/programas`"
+        class="text-sm text-primary hover:underline mb-4 inline-block"
+      >
         ← Volver a programas
       </a>
       <h1 class="text-2xl font-bold text-base-content mb-6">Protocolo de Seguridad</h1>
@@ -12,51 +15,22 @@
         <AlertMessage v-if="exito" type="success" :mensaje="exito" class="mb-4" />
 
         <BaseCard>
-          <template #header><h2 class="text-lg">{{ programa?.nombre || 'Programa' }}</h2></template>
+          <template #header
+            ><h2 class="text-lg">{{ programa?.nombre || 'Programa' }}</h2></template
+          >
 
           <form class="space-y-4" @submit.prevent="guardar">
-            <FormField label="Lugar de la actividad">
-              <BaseInput v-model="form.lugar" placeholder="Dirección o ubicación" />
-            </FormField>
-
-            <FormField label="Fecha y hora">
-              <BaseInput v-model="form.fecha_hora" type="datetime-local" />
-            </FormField>
-
-            <FormField label="Responsable de seguridad">
-              <CatalogoAutocomplete
-                v-model="form.id_responsable_seguridad"
-                catalogo="perfiles"
-                :items="[]"
-                placeholder="Buscar responsable…"
-              />
-            </FormField>
-
-            <FormField label="Riesgos identificados">
+            <FormField label="Servicios disponibles">
               <textarea
-                v-model="form.riesgos"
+                v-model="form.servicios_disponibles"
                 rows="3"
                 class="w-full px-3 py-2 border border-base-300 rounded-lg bg-base-100 text-sm resize-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                placeholder="Lista de riesgos…"
+                placeholder="Agua, baños, electricidad…"
               />
             </FormField>
 
-            <FormField label="Medidas de prevención">
-              <textarea
-                v-model="form.medidas_prevencion"
-                rows="3"
-                class="w-full px-3 py-2 border border-base-300 rounded-lg bg-base-100 text-sm resize-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                placeholder="Medidas preventivas…"
-              />
-            </FormField>
-
-            <FormField label="Plan de emergencia">
-              <textarea
-                v-model="form.plan_emergencia"
-                rows="3"
-                class="w-full px-3 py-2 border border-base-300 rounded-lg bg-base-100 text-sm resize-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
-                placeholder="Qué hacer en caso de emergencia…"
-              />
+            <FormField label="Teléfono de policía / emergencias">
+              <BaseInput v-model="form.tel_policia" placeholder="911" />
             </FormField>
 
             <div class="flex justify-end gap-3">
@@ -74,7 +48,6 @@ import { ref, reactive, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { operationService } from '@/services/operation.service'
 
-
 const route = useRoute()
 const cargando = ref(true)
 const guardando = ref(false)
@@ -82,12 +55,8 @@ const programa = ref(null)
 const exito = ref('')
 
 const form = reactive({
-  lugar: '',
-  fecha_hora: '',
-  id_responsable_seguridad: null,
-  riesgos: '',
-  medidas_prevencion: '',
-  plan_emergencia: '',
+  servicios_disponibles: '',
+  tel_policia: '',
 })
 
 async function guardar() {

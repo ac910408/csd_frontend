@@ -10,7 +10,7 @@
 
       <div class="mb-4">
         <FormField label="Filtrar por sección">
-          <CatalogoAutocomplete v-model="filtroSeccion" catalogo="secciones" :items="[]" placeholder="Todas" />
+          <CatalogoAutocomplete v-model="filtroSeccion" catalogo="secciones" endpoint="/secciones" :items="[]" placeholder="Todas" />
         </FormField>
       </div>
 
@@ -42,7 +42,7 @@
         <BaseModal :open="showCreate" title="Nueva transacción" @close="showCreate = false">
           <form class="space-y-4" @submit.prevent="crear">
             <FormField label="Sección" required>
-              <CatalogoAutocomplete v-model="form.id_seccion" catalogo="secciones" :items="[]" placeholder="Seleccionar…" />
+              <CatalogoAutocomplete v-model="form.id_seccion" catalogo="secciones" endpoint="/secciones" :items="[]" placeholder="Seleccionar…" />
             </FormField>
             <div class="grid grid-cols-2 gap-4">
               <FormField label="Monto" required>

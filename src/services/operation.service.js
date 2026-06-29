@@ -36,6 +36,37 @@ export const operationService = {
     return api.post(`/programas/${programaId}/asistencia`, data)
   },
 
+  // ── Miembros de sección ────────────────────────────────
+  getMiembros(seccionId) {
+    return api.get(`/secciones/${seccionId}/miembros`)
+  },
+
+  // ── Enlaces ─────────────────────────────────────────────
+  createEnlace(seccionId, data) {
+    return api.post(`/secciones/${seccionId}/enlaces`, data)
+  },
+
+  cerrarEnlace(enlaceId) {
+    return api.put(`/enlaces/${enlaceId}/cerrar`)
+  },
+
+  // ── Estado de programa ──────────────────────────────────
+  cancelarPrograma(programaId, motivo) {
+    return api.put(`/programas/${programaId}/estado`, { estado: 'cancelado', motivo })
+  },
+
+  reprogramarPrograma(programaId, data) {
+    return api.put(`/programas/${programaId}/estado`, { estado: 'reprogramado', ...data })
+  },
+
+  getCambiosPrograma(programaId) {
+    return api.get(`/programas/${programaId}/cambios`)
+  },
+
+  darBaja(perfilId, { tipo, motivo }) {
+    return api.post(`/perfil/${perfilId}/baja`, { tipo, motivo })
+  },
+
   // ── Actas ───────────────────────────────────────────────
   getActas(seccionId) {
     return api.get(`/secciones/${seccionId}/actas`)

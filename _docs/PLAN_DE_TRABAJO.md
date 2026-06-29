@@ -235,3 +235,68 @@
 - [x] **18.6.1** Postman `POST /auth/register` actualizado con `codigo_invitacion`.
 - [x] **18.6.2** `SearchBar.vue` import de `ref` no usado eliminado.
 - [x] **18.6.3** Código limpio, sin TODOs pendientes.
+
+---
+
+## ✅ Fase 19: Sincronización Postman ↔ Frontend
+
+> Endpoints detectados en Postman que faltaban en servicios o viceversa.
+
+- [x] **19.1** `operation.service.js` + `getMiembros(seccionId)` → `GET /secciones/:id/miembros`
+- [x] **19.2** `operation.service.js` + `createEnlace()` / `cerrarEnlace()` → enlaces entre secciones
+- [x] **19.3** `operation.service.js` + `cancelarPrograma()` / `reprogramarPrograma()` → `PUT /programas/:id/estado`
+- [x] **19.4** `operation.service.js` + `getCambiosPrograma()` → `GET /programas/:id/cambios`
+- [x] **19.5** `operation.service.js` + `darBaja(perfilId)` → `POST /perfil/:id/baja`
+- [x] **19.6** `pages/programas/[id]/asistencia.vue` — usa `getMiembros()` en vez de lista vacía
+- [x] **19.7** `CouncilMinuteForm.vue` — miembros de sección vía `getMiembros()`
+- [x] **19.8** Postman `POST /auth/register` → `codigo_invitacion` agregado
+
+### 🔧 Correcciones de payload (análisis response body)
+
+- [x] **19.9** `auth.store.js` login: `roles` viene en `data.roles`, no `data.usuario.roles`
+- [x] **19.10** `PUT /perfil/salud`: `peso_kg` → `peso`, `talla_cm` → `talla`
+- [x] **19.11** `PUT /programas/:id/seguridad`: campos `servicios_disponibles`, `tel_policia`
+- [x] **19.12** `PUT /programas/:id/traslado`: campos `tipo_transporte`, `salida_fecha_hora`, `salida_punto`
+- [x] **19.13** `POST /secciones/:id/actas`: agregado campo `fecha` (ISO)
+- [x] **19.14** `PUT /programas/:id/estado`: body `{estado, motivo}` en vez de `{accion}`
+- [x] **19.15** `POST /perfil/:id/baja`: body `{tipo, motivo}`
+
+---
+
+## 🔴 Fase 20: Corrección de Roles y Persistencia de Usuario
+
+> Roles eran tratados como objetos `{rol_nombre}` pero la API los retorna como strings `["admin"]`.
+> Al refrescar, `checkSession` llamaba `GET /perfil` que no retorna roles ni `nombre_usuario`.
+
+- [x] **20.1** `hasRole()`: `roles.value.includes(rol)` en vez de `.some(r => r.rol_nombre === rol)`
+- [x] **20.2** `rolesDisponibles`: mapea `nombreRol` directamente, no `r.rol_nombre`
+- [x] **20.3** `seleccionarRol()`: `roles.value.includes(rol)` en vez de `hasRole(rol)`
+- [x] **20.4** `login()` persiste `roles` y `usuario` en localStorage (`csd-roles`, `csd-usuario`)
+- [x] **20.5** `logout()` limpia `csd-usuario` y `csd-roles` de localStorage
+- [x] **20.6** `checkSession()` solo valida token (no sobrescribe usuario ni roles)
+- [x] **20.7** `usuario` se inicializa desde localStorage (`csd-usuario`)
+- [x] **20.8** Login con múltiples roles: auto-selecciona admin, o el primer rol
+
+---
+
+## 🔵 Fase 21: Corrección de endpoints en CatalogoAutocomplete
+
+> `CatalogoAutocomplete` llamaba `/catalogos/{catalogo}` para todo, pero provincias/grupos/secciones tienen sus propias rutas.
+
+- [x] **21.1** Prop `endpoint` agregado a `CatalogoAutocomplete`. Si se define, usa `api.get(endpoint)` en vez de `/catalogos/`.
+- [x] **21.2** `catalogo="provincias"` → `endpoint="/provincias"` en 2 archivos
+- [x] **21.3** `catalogo="grupos"` → `endpoint="/grupos"` en 5 archivos
+- [x] **21.4** `catalogo="secciones"` → `endpoint="/secciones"` en 4 archivos
+
+---
+
+## 🎨 Fase 22: Sidebar Rediseñado
+
+- [x] **22.1** Compacto por defecto (w-16), expandible (w-64). Animación `transition-all duration-300`.
+- [x] **22.2** Logo con ícono Mountain + botón expandir/colapsar (PanelLeftClose/Open) visible en hover.
+- [x] **22.3** Submenús: modo expandido = acordeón inline con ChevronDown rotado. Modo compacto = popover flotante a la derecha.
+- [x] **22.4** Footer: avatar con iniciales + dropdown (perfil, selector de rol, selector de tema claro/oscuro/sistema, cerrar sesión).
+- [x] **22.5** Sidebar `h-screen sticky`, scroll independiente en nav.
+- [x] **22.6** AppHeader simplificado: solo breadcrumbs + botón menú mobile. Tema y avatar movidos al sidebar.
+- [x] **22.7** Color `mundial` como tema del sidebar.
+- [x] **22.8** Sin CSS personalizado, solo Tailwind.

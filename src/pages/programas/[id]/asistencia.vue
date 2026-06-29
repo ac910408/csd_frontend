@@ -1,7 +1,10 @@
 <template>
   <DashboardLayout>
     <div class="max-w-2xl mx-auto">
-      <a :href="`/ciclos/${programa?.id_ciclo}/programas`" class="text-sm text-primary hover:underline mb-4 inline-block">
+      <a
+        :href="`/ciclos/${programa?.id_ciclo}/programas`"
+        class="text-sm text-primary hover:underline mb-4 inline-block"
+      >
         ← Volver a programas
       </a>
       <h1 class="text-2xl font-bold text-base-content mb-6">Asistencia</h1>
@@ -10,7 +13,9 @@
 
       <template v-else>
         <BaseCard>
-          <template #header><h2 class="text-lg">{{ programa?.nombre || 'Programa' }}</h2></template>
+          <template #header
+            ><h2 class="text-lg">{{ programa?.nombre || 'Programa' }}</h2></template
+          >
 
           <AlertMessage v-if="exito" type="success" :mensaje="exito" class="mb-4" />
 
@@ -26,10 +31,16 @@
                 class="rounded"
                 @change="guardarAsistencia(m.id_perfil)"
               />
-              <span class="text-sm text-base-content">{{ m.nombre || `Perfil #${m.id_perfil}` }}</span>
+              <span class="text-sm text-base-content">{{
+                m.nombre || `Perfil #${m.id_perfil}`
+              }}</span>
             </label>
           </div>
-          <EmptyState v-else titulo="Sin miembros" descripcion="No hay perfiles para registrar asistencia" />
+          <EmptyState
+            v-else
+            titulo="Sin miembros"
+            descripcion="No hay perfiles para registrar asistencia"
+          />
         </BaseCard>
       </template>
     </div>
@@ -40,7 +51,6 @@
 import { ref, reactive, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { operationService } from '@/services/operation.service'
-
 
 const route = useRoute()
 const cargando = ref(true)
@@ -65,12 +75,8 @@ async function guardarAsistencia(idPerfil) {
 
 onMounted(async () => {
   try {
-    // Cargar datos del programa para obtener miembros
-    // Simplificado: usar endpoint de sección
-    const res = await operationService.getProgramas(route.params.id)
-    // Asumir que el backend devuelve miembros en el programa
-    // Demo: lista vacía por ahora
-    miembros.value = res.miembros || []
+    const res = await operationService.getMiembros(programa.value?.id_seccion || route.params.id)
+    miembros.value = res.data || []
   } finally {
     cargando.value = false
   }

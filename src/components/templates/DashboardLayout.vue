@@ -1,16 +1,9 @@
 <template>
   <div class="min-h-screen bg-base-100 flex">
-    <AppSidebar :mobile-open="sidebarOpen" @update:mobile-open="sidebarOpen = $event" />
+    <AppSidebar />
 
     <div class="flex-1 flex flex-col min-w-0">
-      <AppHeader @toggle-sidebar="sidebarOpen = !sidebarOpen" />
-
-      <!-- Overlay mobile sidebar -->
-      <div
-        v-if="sidebarOpen"
-        class="fixed inset-0 bg-black/50 z-40 lg:hidden"
-        @click="sidebarOpen = false"
-      />
+      <AppHeader />
 
       <main class="flex-1 p-4 lg:p-6 overflow-auto">
         <slot />
@@ -44,11 +37,9 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { CircleCheck, TriangleAlert, CircleAlert, Info, X } from '@lucide/vue'
 import { useUiStore } from '@/stores/ui.store'
 
-const sidebarOpen = ref(false)
 const ui = useUiStore()
 
 function toastClasses(type) {

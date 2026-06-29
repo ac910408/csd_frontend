@@ -12,7 +12,7 @@
         <FormField label="Filtrar por grupo">
           <CatalogoAutocomplete
             v-model="filtroGrupo"
-            catalogo="grupos"
+            catalogo="grupos" endpoint="/grupos"
             :items="[]"
             placeholder="Todos los grupos"
           />
@@ -44,7 +44,7 @@
           <FormField label="Grupo" required>
             <CatalogoAutocomplete
               v-model="form.id_grupo"
-              catalogo="grupos"
+              catalogo="grupos" endpoint="/grupos"
               :items="[]"
               placeholder="Seleccionar grupo…"
             />

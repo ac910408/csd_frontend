@@ -5,12 +5,26 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
-    { "key": "baseUrl", "value": "http://localhost:8080", "type": "string" },
-    { "key": "token", "value": "", "type": "string" }
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
   ],
   "auth": {
     "type": "bearer",
-    "bearer": [{ "key": "token", "value": "{{token}}", "type": "string" }]
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
   },
   "item": [
     {
@@ -35,33 +49,117 @@
           ],
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"correo_electronico\":\"admin@csd.local\",\"contrasena\":\"Admin123!\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/auth/login",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "login"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\":{\"token\":\"eyJ...\",\"usuario\":{\"id\":1,\"nombre_usuario\":\"admin\",\"correo_electronico\":\"admin@csd.local\",\"esta_activo\":true},\"roles\":[\"admin\"]}}"
+            },
+            {
+              "name": "401 Error",
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\":{\"codigo\":\"UNAUTHORIZED\",\"mensaje\":\"credenciales inválidas\"}}"
+            }
+          ]
         },
         {
           "name": "POST /auth/register",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"nombre_usuario\":\"nuevo\",\"correo_electronico\":\"nuevo@csd.local\",\"contrasena\":\"Test123!\",\"codigo_invitacion\":\"ABCD1234\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/auth/register",
-              "host": ["{{baseUrl}}"],
-              "path": ["auth", "register"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "register"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\":{\"id\":2,\"nombre_usuario\":\"nuevo\",\"correo_electronico\":\"nuevo@csd.local\",\"esta_activo\":true}}"
+            },
+            {
+              "name": "409 Duplicate",
+              "status": "Conflict",
+              "code": 409,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\":{\"codigo\":\"DUPLICATE\",\"mensaje\":\"el correo electrónico ya está registrado\"}}"
+            },
+            {
+              "name": "401 Inválido",
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\":{\"codigo\":\"UNAUTHORIZED\",\"mensaje\":\"código de invitación inválido\"}}"
+            }
+          ]
         }
       ]
     },
@@ -74,10 +172,41 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/catalogos/roles",
-              "host": ["{{baseUrl}}"],
-              "path": ["catalogos", "roles"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "catalogos",
+                "roles"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": [{\"id\": 1, \"nombre\": \"Rol de ejemplo\"}]}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"catálogo no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "GET /catalogos/cargos",
@@ -85,10 +214,41 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/catalogos/cargos",
-              "host": ["{{baseUrl}}"],
-              "path": ["catalogos", "cargos"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "catalogos",
+                "cargos"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": [{\"id\": 1, \"nombre\": \"Rol de ejemplo\"}]}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"catálogo no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "GET /catalogos/tipos-seccion",
@@ -96,10 +256,41 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/catalogos/tipos-seccion",
-              "host": ["{{baseUrl}}"],
-              "path": ["catalogos", "tipos-seccion"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "catalogos",
+                "tipos-seccion"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": [{\"id\": 1, \"nombre\": \"Rol de ejemplo\"}]}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"catálogo no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "GET /catalogos/ods",
@@ -107,10 +298,41 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/catalogos/ods",
-              "host": ["{{baseUrl}}"],
-              "path": ["catalogos", "ods"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "catalogos",
+                "ods"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": [{\"id\": 1, \"nombre\": \"Rol de ejemplo\"}]}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"catálogo no encontrado\"}}"
+            }
+          ]
         }
       ]
     },
@@ -123,10 +345,40 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/provincias",
-              "host": ["{{baseUrl}}"],
-              "path": ["provincias"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "provincias"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": [{\"id\": 1, \"nombre\": \"Ejemplo\"}]}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"provincias no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "GET /provincias/:id",
@@ -134,26 +386,92 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/provincias/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["provincias", "1"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "provincias",
+                "1"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"provincia no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /provincias",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"nombre\":\"Nueva Provincia\",\"clave\":\"NPV\",\"id_estado\":20}"
             },
             "url": {
               "raw": "{{baseUrl}}/provincias",
-              "host": ["{{baseUrl}}"],
-              "path": ["provincias"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "provincias"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         },
         {
           "name": "GET /grupos",
@@ -161,10 +479,40 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/grupos",
-              "host": ["{{baseUrl}}"],
-              "path": ["grupos"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "grupos"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": [{\"id\": 1, \"nombre\": \"Ejemplo\"}]}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"grupos no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "GET /grupos/:id",
@@ -172,26 +520,92 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/grupos/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["grupos", "1"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "grupos",
+                "1"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"grupo no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /grupos",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"id_provincia\":1,\"numero\":10,\"nombre\":\"Nuevo Grupo\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/grupos",
-              "host": ["{{baseUrl}}"],
-              "path": ["grupos"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "grupos"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         },
         {
           "name": "GET /grupos/:id/seguridad",
@@ -199,23 +613,107 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/grupos/1/seguridad",
-              "host": ["{{baseUrl}}"],
-              "path": ["grupos", "1", "seguridad"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "grupos",
+                "1",
+                "seguridad"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"grupo no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "PUT /grupos/:id/seguridad",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{}" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
             "url": {
               "raw": "{{baseUrl}}/grupos/1/seguridad",
-              "host": ["{{baseUrl}}"],
-              "path": ["grupos", "1", "seguridad"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "grupos",
+                "1",
+                "seguridad"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo actualizado\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"seguridad de grupo no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "GET /secciones",
@@ -223,10 +721,40 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/secciones",
-              "host": ["{{baseUrl}}"],
-              "path": ["secciones"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "secciones"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": [{\"id\": 1, \"nombre\": \"Ejemplo\"}]}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"secciones no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "GET /secciones/:id",
@@ -234,26 +762,92 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/secciones/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["secciones", "1"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "secciones",
+                "1"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"sección no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /secciones",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"id_grupo\":1,\"id_tipo_seccion\":1,\"nombre_propio\":\"Lobatos\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/secciones",
-              "host": ["{{baseUrl}}"],
-              "path": ["secciones"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "secciones"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         }
       ]
     },
@@ -266,26 +860,103 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/perfil",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"perfil no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "PUT /perfil",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"nombre\":\"Ana\",\"apellido_paterno\":\"García\",\"apellido_materno\":\"López\",\"fecha_nacimiento\":\"2010-05-15T00:00:00Z\",\"lugar_nacimiento\":\"Oaxaca\",\"id_grupo\":1}"
             },
             "url": {
               "raw": "{{baseUrl}}/perfil",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo actualizado\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"perfil no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "GET /perfil/salud",
@@ -293,23 +964,105 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/perfil/salud",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "salud"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "salud"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"perfil no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "PUT /perfil/salud",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\"peso\":70,\"talla\":175}" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"peso\":70,\"talla\":175}"
+            },
             "url": {
               "raw": "{{baseUrl}}/perfil/salud",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "salud"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "salud"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo actualizado\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"salud no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "DELETE /perfil/salud",
@@ -318,10 +1071,41 @@
             "method": "DELETE",
             "url": {
               "raw": "{{baseUrl}}/perfil/salud",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "salud"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "salud"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"mensaje\": \"salud eliminado\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"salud no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "GET /perfil/salud/alergias",
@@ -329,26 +1113,95 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/perfil/salud/alergias",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "salud", "alergias"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "salud",
+                "alergias"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"perfil no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /perfil/salud/alergias",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"id_alergeno\":1,\"severidad\":\"leve\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/perfil/salud/alergias",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "salud", "alergias"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "salud",
+                "alergias"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         },
         {
           "name": "GET /perfil/salud/antecedentes",
@@ -356,26 +1209,95 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/perfil/salud/antecedentes",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "salud", "antecedentes"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "salud",
+                "antecedentes"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"perfil no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /perfil/salud/antecedentes",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"id_antecedente\":1,\"presenta\":true}"
             },
             "url": {
               "raw": "{{baseUrl}}/perfil/salud/antecedentes",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "salud", "antecedentes"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "salud",
+                "antecedentes"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         },
         {
           "name": "GET /perfil/salud/vacunas",
@@ -383,26 +1305,95 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/perfil/salud/vacunas",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "salud", "vacunas"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "salud",
+                "vacunas"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"perfil no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /perfil/salud/vacunas",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"id_vacuna\":1,\"aplico\":true}"
             },
             "url": {
               "raw": "{{baseUrl}}/perfil/salud/vacunas",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "salud", "vacunas"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "salud",
+                "vacunas"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         },
         {
           "name": "GET /perfil/salud/contactos",
@@ -410,26 +1401,95 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/perfil/salud/contactos",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "salud", "contactos"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "salud",
+                "contactos"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"perfil no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /perfil/salud/contactos",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"contacto\":{\"nombre\":\"María López\",\"telefono\":\"9511234567\"},\"vinculo\":{\"parentesco\":\"madre\",\"orden\":1}}"
             },
             "url": {
               "raw": "{{baseUrl}}/perfil/salud/contactos",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "salud", "contactos"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "salud",
+                "contactos"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         },
         {
           "name": "GET /perfil/salud/afiliaciones",
@@ -437,26 +1497,95 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/perfil/salud/afiliaciones",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "salud", "afiliaciones"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "salud",
+                "afiliaciones"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"perfil no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /perfil/salud/afiliaciones",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"proveedor_id\":1,\"numero_poliza\":\"12345\",\"id_tipo_beneficiario\":1}"
             },
             "url": {
               "raw": "{{baseUrl}}/perfil/salud/afiliaciones",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "salud", "afiliaciones"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "salud",
+                "afiliaciones"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         }
       ]
     },
@@ -469,43 +1598,162 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/perfil/progresion/acciones",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "progresion", "acciones"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "progresion",
+                "acciones"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"perfil no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /perfil/progresion/acciones",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"id_saber\":1,\"id_ciclo\":1,\"descripcion\":\"Mi acción educativa\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/perfil/progresion/acciones",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "progresion", "acciones"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "progresion",
+                "acciones"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         },
         {
           "name": "PUT /perfil/progresion/acciones/:id",
           "description": "Actualizar reflexión o estado de una acción personal",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"descripcion\":\"Actualizado\",\"estado\":\"cumplido\",\"sensacion\":\"Me sentí muy bien\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/perfil/progresion/acciones/1",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "progresion", "acciones", "1"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "progresion",
+                "acciones",
+                "1"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo actualizado\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"acción no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "GET /perfil/progresion/especialidades",
@@ -513,27 +1761,96 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/perfil/progresion/especialidades",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "progresion", "especialidades"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "progresion",
+                "especialidades"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"perfil no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /perfil/progresion/especialidades",
           "description": "Registrar especialidad (formato CONOZCO/APLICO/COMPARTO)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"id_cat_especialidad\":1,\"id_seccion\":1,\"nombre\":\"Aprendiendo a hablar\",\"conozco\":\"Qué es la comunicación\",\"aplico\":\"Di una plática\",\"comparto\":\"Enseñé a otros\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/perfil/progresion/especialidades",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "progresion", "especialidades"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "progresion",
+                "especialidades"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         },
         {
           "name": "GET /perfil/progresion/logros/compromiso",
@@ -541,27 +1858,110 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/perfil/progresion/logros/compromiso",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "progresion", "logros", "compromiso"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "progresion",
+                "logros",
+                "compromiso"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"perfil no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "PUT /perfil/progresion/logros/compromiso",
           "description": "Registrar promesa scout (hito único)",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"obtenido_el\":\"2024-03-15T00:00:00Z\",\"lugar\":\"Campamento San Felipe\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/perfil/progresion/logros/compromiso",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "progresion", "logros", "compromiso"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "progresion",
+                "logros",
+                "compromiso"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo actualizado\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"compromiso no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "GET /perfil/progresion/logros/insignias-finales",
@@ -569,26 +1969,97 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/perfil/progresion/logros/insignias-finales",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "progresion", "logros", "insignias-finales"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "progresion",
+                "logros",
+                "insignias-finales"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"perfil no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /perfil/progresion/logros/insignias-finales",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"id_insignia_final\":1,\"obtenido_el\":\"2024-06-01T00:00:00Z\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/perfil/progresion/logros/insignias-finales",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "progresion", "logros", "insignias-finales"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "progresion",
+                "logros",
+                "insignias-finales"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         },
         {
           "name": "GET /perfil/progresion/completa",
@@ -597,10 +2068,42 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/perfil/progresion/completa",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "progresion", "completa"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "progresion",
+                "completa"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"perfil no encontrado\"}}"
+            }
+          ]
         }
       ]
     },
@@ -613,26 +2116,95 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/secciones/1/ciclos",
-              "host": ["{{baseUrl}}"],
-              "path": ["secciones", "1", "ciclos"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "secciones",
+                "1",
+                "ciclos"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"sección no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /secciones/:id/ciclos",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"id_responsable\":1,\"nombre\":\"Ciclo 2025-1\",\"id_categoria_desarrollo\":1}"
             },
             "url": {
               "raw": "{{baseUrl}}/secciones/1/ciclos",
-              "host": ["{{baseUrl}}"],
-              "path": ["secciones", "1", "ciclos"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "secciones",
+                "1",
+                "ciclos"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         },
         {
           "name": "GET /ciclos/:id/programas",
@@ -640,42 +2212,148 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/ciclos/1/programas",
-              "host": ["{{baseUrl}}"],
-              "path": ["ciclos", "1", "programas"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ciclos",
+                "1",
+                "programas"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": [{\"id\": 1, \"nombre\": \"Ejemplo\"}]}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"programas no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /ciclos/:id/programas",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"id_seccion\":1,\"id_responsable\":1,\"tipo\":\"interno\",\"nombre\":\"Campamento\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/ciclos/1/programas",
-              "host": ["{{baseUrl}}"],
-              "path": ["ciclos", "1", "programas"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ciclos",
+                "1",
+                "programas"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         },
         {
           "name": "POST /programas/:id/asistencia",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"id_perfil\":1,\"presente\":true}"
             },
             "url": {
               "raw": "{{baseUrl}}/programas/1/asistencia",
-              "host": ["{{baseUrl}}"],
-              "path": ["programas", "1", "asistencia"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "programas",
+                "1",
+                "asistencia"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         }
       ]
     },
@@ -688,42 +2366,148 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/secciones/1/actas",
-              "host": ["{{baseUrl}}"],
-              "path": ["secciones", "1", "actas"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "secciones",
+                "1",
+                "actas"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"sección no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /secciones/:id/actas",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"tipo_acta\":\"ordinaria\",\"fecha\":\"2024-01-15T00:00:00Z\",\"orden_del_dia\":\"1. Revisión\\n2. Planeación\",\"acuerdos\":\"Se aprueba el plan\",\"id_preside\":1,\"id_elabora\":1}"
             },
             "url": {
               "raw": "{{baseUrl}}/secciones/1/actas",
-              "host": ["{{baseUrl}}"],
-              "path": ["secciones", "1", "actas"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "secciones",
+                "1",
+                "actas"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         },
         {
           "name": "POST /actas/:id/asistencia",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"id_perfil\":1,\"presente\":true}"
             },
             "url": {
               "raw": "{{baseUrl}}/actas/1/asistencia",
-              "host": ["{{baseUrl}}"],
-              "path": ["actas", "1", "asistencia"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actas",
+                "1",
+                "asistencia"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         }
       ]
     },
@@ -737,26 +2521,107 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/programas/1/seguridad",
-              "host": ["{{baseUrl}}"],
-              "path": ["programas", "1", "seguridad"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "programas",
+                "1",
+                "seguridad"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"seguridad de programa no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "PUT /programas/:id/seguridad",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"servicios_disponibles\":\"Agua, baños\",\"tel_policia\":\"911\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/programas/1/seguridad",
-              "host": ["{{baseUrl}}"],
-              "path": ["programas", "1", "seguridad"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "programas",
+                "1",
+                "seguridad"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo actualizado\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"seguridad de programa no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "GET /programas/:id/traslado",
@@ -764,26 +2629,107 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/programas/1/traslado",
-              "host": ["{{baseUrl}}"],
-              "path": ["programas", "1", "traslado"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "programas",
+                "1",
+                "traslado"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"traslado no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "PUT /programas/:id/traslado",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"tipo_transporte\":\"particular\",\"salida_fecha_hora\":\"2024-06-15T08:00:00Z\",\"salida_punto\":\"Local del grupo\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/programas/1/traslado",
-              "host": ["{{baseUrl}}"],
-              "path": ["programas", "1", "traslado"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "programas",
+                "1",
+                "traslado"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo actualizado\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"traslado no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "GET /traslados/:id/pasajeros",
@@ -791,26 +2737,95 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/traslados/1/pasajeros",
-              "host": ["{{baseUrl}}"],
-              "path": ["traslados", "1", "pasajeros"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "traslados",
+                "1",
+                "pasajeros"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": [{\"id\": 1, \"nombre\": \"Ejemplo\"}]}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"pasajeros no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /traslados/:id/pasajeros",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"id_perfil\":1,\"seccion\":\"Manada\",\"cum\":\"ASO1234567\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/traslados/1/pasajeros",
-              "host": ["{{baseUrl}}"],
-              "path": ["traslados", "1", "pasajeros"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "traslados",
+                "1",
+                "pasajeros"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         }
       ]
     },
@@ -823,27 +2838,97 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/transacciones?seccion_id=1",
-              "host": ["{{baseUrl}}"],
-              "path": ["transacciones"],
-              "query": [{ "key": "seccion_id", "value": "1" }]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transacciones"
+              ],
+              "query": [
+                {
+                  "key": "seccion_id",
+                  "value": "1"
+                }
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": [{\"id\": 1, \"nombre\": \"Ejemplo\"}]}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"transacciones no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /transacciones",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"id_seccion\":1,\"monto\":500,\"tipo\":\"ingreso\",\"concepto\":\"Cuota mensual\",\"id_registrado_por\":1}"
             },
             "url": {
               "raw": "{{baseUrl}}/transacciones",
-              "host": ["{{baseUrl}}"],
-              "path": ["transacciones"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transacciones"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         },
         {
           "name": "GET /secciones/:id/inventario",
@@ -851,26 +2936,95 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/secciones/1/inventario",
-              "host": ["{{baseUrl}}"],
-              "path": ["secciones", "1", "inventario"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "secciones",
+                "1",
+                "inventario"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"sección no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /secciones/:id/inventario",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"nombre\":\"Tienda de campaña\",\"cantidad\":2,\"estado_fisico\":\"Bueno\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/secciones/1/inventario",
-              "host": ["{{baseUrl}}"],
-              "path": ["secciones", "1", "inventario"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "secciones",
+                "1",
+                "inventario"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         }
       ]
     },
@@ -883,26 +3037,91 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/sugerencias",
-              "host": ["{{baseUrl}}"],
-              "path": ["sugerencias"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sugerencias"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": [{\"id\": 1, \"nombre\": \"Ejemplo\"}]}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"sugerencias no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /sugerencias",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"tabla\":\"cat_alergeno\",\"nombre\":\"Níquel\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/sugerencias",
-              "host": ["{{baseUrl}}"],
-              "path": ["sugerencias"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sugerencias"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         },
         {
           "name": "GET /admin/sugerencias",
@@ -910,24 +3129,96 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/admin/sugerencias",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "sugerencias"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "sugerencias"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": [{\"id\": 1, \"nombre\": \"Ejemplo\"}]}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"sugerencias no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /admin/sugerencias/:id/resolver",
           "description": "Resolver sugerencia: aprobar_nuevo, vincular_existente o rechazar",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\"accion\":\"aprobar_nuevo\"}" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"accion\":\"aprobar_nuevo\"}"
+            },
             "url": {
               "raw": "{{baseUrl}}/admin/sugerencias/1/resolver",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "sugerencias", "1", "resolver"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "sugerencias",
+                "1",
+                "resolver"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         }
       ]
     },
@@ -938,17 +3229,41 @@
           "name": "POST /admin/invitaciones",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"correo_electronico\":\"invitado@email.com\",\"id_grupo\":1}"
             },
             "url": {
               "raw": "{{baseUrl}}/admin/invitaciones",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "invitaciones"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "invitaciones"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Creada",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\":{\"id\":1,\"codigo\":\"XK9M2PQR\",\"correo_electronico\":\"invitado@email.com\",\"id_grupo\":1,\"expira_el\":\"2025-07-02T00:00:00Z\"}}"
+            }
+          ]
         },
         {
           "name": "GET /admin/invitaciones",
@@ -956,10 +3271,29 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/admin/invitaciones",
-              "host": ["{{baseUrl}}"],
-              "path": ["admin", "invitaciones"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "invitaciones"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 Lista",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\":[{\"id\":1,\"codigo\":\"XK9M2PQR\",\"correo_electronico\":\"invitado@email.com\",\"id_grupo\":1,\"estado\":\"pendiente\",\"expira_el\":\"2025-07-02T00:00:00Z\",\"creado_por\":1}]}"
+            }
+          ]
         }
       ]
     },
@@ -972,23 +3306,95 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/usuarios/1/roles",
-              "host": ["{{baseUrl}}"],
-              "path": ["usuarios", "1", "roles"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "1",
+                "roles"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"roles no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /usuarios/:id/roles",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\"id_rol\":2,\"id_grupo\":1}" },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"id_rol\":2,\"id_grupo\":1}"
+            },
             "url": {
               "raw": "{{baseUrl}}/usuarios/1/roles",
-              "host": ["{{baseUrl}}"],
-              "path": ["usuarios", "1", "roles"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios",
+                "1",
+                "roles"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         }
       ]
     },
@@ -1000,34 +3406,132 @@
           "description": "Cambiar estado del programa a cancelado",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"estado\":\"cancelado\",\"motivo\":\"Evento cancelado por mal clima\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/programas/1/estado",
-              "host": ["{{baseUrl}}"],
-              "path": ["programas", "1", "estado"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "programas",
+                "1",
+                "estado"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo actualizado\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"programa no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "PUT /programas/:id/estado (reprogramar)",
           "description": "Reprogramar: crea automáticamente un nuevo programa con la nueva fecha",
           "request": {
             "method": "PUT",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"estado\":\"reprogramado\",\"motivo\":\"Lluvias pronosticadas\",\"nueva_fecha_inicio\":\"2025-06-21T00:00:00Z\",\"nuevo_lugar\":\"Local del grupo\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/programas/1/estado",
-              "host": ["{{baseUrl}}"],
-              "path": ["programas", "1", "estado"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "programas",
+                "1",
+                "estado"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo actualizado\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"programa no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "GET /programas/:id/cambios",
@@ -1036,10 +3540,42 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/programas/1/cambios",
-              "host": ["{{baseUrl}}"],
-              "path": ["programas", "1", "cambios"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "programas",
+                "1",
+                "cambios"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": [{\"id\": 1, \"nombre\": \"Ejemplo\"}]}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"cambios no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "GET /reportes/mensual",
@@ -1048,15 +3584,55 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/reportes/mensual?seccion_id=1&anio=2025&mes=6",
-              "host": ["{{baseUrl}}"],
-              "path": ["reportes", "mensual"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reportes",
+                "mensual"
+              ],
               "query": [
-                { "key": "seccion_id", "value": "1" },
-                { "key": "anio", "value": "2025" },
-                { "key": "mes", "value": "6" }
+                {
+                  "key": "seccion_id",
+                  "value": "1"
+                },
+                {
+                  "key": "anio",
+                  "value": "2025"
+                },
+                {
+                  "key": "mes",
+                  "value": "6"
+                }
               ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": [{\"id\": 1, \"nombre\": \"Ejemplo\"}]}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"reporte no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "GET /reportes/mensual-completo",
@@ -1065,15 +3641,55 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/reportes/mensual-completo?seccion_id=1&anio=2025&mes=6",
-              "host": ["{{baseUrl}}"],
-              "path": ["reportes", "mensual-completo"],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "reportes",
+                "mensual-completo"
+              ],
               "query": [
-                { "key": "seccion_id", "value": "1" },
-                { "key": "anio", "value": "2025" },
-                { "key": "mes", "value": "6" }
+                {
+                  "key": "seccion_id",
+                  "value": "1"
+                },
+                {
+                  "key": "anio",
+                  "value": "2025"
+                },
+                {
+                  "key": "mes",
+                  "value": "6"
+                }
               ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": [{\"id\": 1, \"nombre\": \"Ejemplo\"}]}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"reporte no encontrado\"}}"
+            }
+          ]
         }
       ]
     },
@@ -1087,27 +3703,96 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/secciones/1/miembros",
-              "host": ["{{baseUrl}}"],
-              "path": ["secciones", "1", "miembros"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "secciones",
+                "1",
+                "miembros"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"sección no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /secciones/:id/enlaces",
           "description": "Iniciar período de enlace entre secciones",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"id_perfil\":1,\"id_seccion_destino\":2,\"fecha_fin_estimada\":\"2025-09-01T00:00:00Z\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/secciones/1/enlaces",
-              "host": ["{{baseUrl}}"],
-              "path": ["secciones", "1", "enlaces"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "secciones",
+                "1",
+                "enlaces"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         },
         {
           "name": "PUT /enlaces/:id/cerrar",
@@ -1116,27 +3801,108 @@
             "method": "PUT",
             "url": {
               "raw": "{{baseUrl}}/enlaces/1/cerrar",
-              "host": ["{{baseUrl}}"],
-              "path": ["enlaces", "1", "cerrar"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "enlaces",
+                "1",
+                "cerrar"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "200 OK",
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo actualizado\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            },
+            {
+              "name": "404 Not Found",
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"NOT_FOUND\", \"mensaje\": \"enlace no encontrado\"}}"
+            }
+          ]
         },
         {
           "name": "POST /perfil/:id/baja (manual)",
           "description": "Dar de baja a un miembro (admin/dirigente)",
           "request": {
             "method": "POST",
-            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
             "body": {
               "mode": "raw",
               "raw": "{\"tipo\":\"manual\",\"motivo\":\"Dejó de asistir\"}"
             },
             "url": {
               "raw": "{{baseUrl}}/perfil/1/baja",
-              "host": ["{{baseUrl}}"],
-              "path": ["perfil", "1", "baja"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "perfil",
+                "1",
+                "baja"
+              ]
             }
-          }
+          },
+          "response": [
+            {
+              "name": "201 Created",
+              "status": "Created",
+              "code": 201,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"data\": {\"id\": 1, \"nombre\": \"Ejemplo\"}}"
+            },
+            {
+              "name": "422 Error de validación",
+              "status": "Unprocessable Entity",
+              "code": 422,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\"error\": {\"codigo\": \"VALIDATION_ERROR\", \"mensaje\": \"datos inválidos\", \"detalles\": [{\"campo\": \"body\", \"motivo\": \"...\"}]}}"
+            }
+          ]
         }
       ]
     }
