@@ -45,7 +45,7 @@
             <span v-if="expanded" class="text-sm font-medium truncate">{{ item.label }}</span>
             <span
               v-if="!expanded"
-              class="invisible absolute start-full top-1/2 ms-4 -translate-y-1/2 rounded bg-base-contrast px-2 py-1.5 text-xs font-medium text-base-100 whitespace-nowrap group-hover:visible z-50"
+              class="invisible absolute inset-s-full top-1/2 ms-4 -translate-y-1/2 rounded bg-base-contrast px-2 py-1.5 text-xs font-medium text-base-100 whitespace-nowrap group-hover:visible z-50"
             >
               {{ item.label }}
             </span>
