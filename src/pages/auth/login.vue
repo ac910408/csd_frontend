@@ -19,12 +19,14 @@
             @cerrar="error = ''"
           />
 
-          <form class="space-y-4" @submit.prevent="handleLogin">
+          <form class="space-y-4" @submit.prevent="handleLogin" autocomplete="on">
             <FormField label="Correo electrónico" :error="errors.correo_electronico" required>
               <BaseInput
                 v-model="form.correo_electronico"
+                name="email"
                 type="email"
                 placeholder="tu@correo.com"
+                autocomplete="email"
                 :error="errors.correo_electronico"
                 @blur="tocar('correo_electronico', form.correo_electronico)"
               />
@@ -33,8 +35,10 @@
             <FormField label="Contraseña" :error="errors.contrasena" required>
               <BaseInput
                 v-model="form.contrasena"
+                name="password"
                 type="password"
                 placeholder="••••••••"
+                autocomplete="current-password"
                 :error="errors.contrasena"
                 @blur="tocar('contrasena', form.contrasena)"
               />
@@ -69,7 +73,6 @@ import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/auth.store'
 import { useForm } from '@/utils/validators'
-
 
 const router = useRouter()
 const auth = useAuthStore()

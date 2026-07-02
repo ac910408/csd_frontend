@@ -1,59 +1,38 @@
 <template>
-  <div class="flex flex-wrap gap-2">
+  <div class="flex gap-1 flex-wrap">
     <button
-      v-for="op in opciones"
-      :key="op.value"
-      :class="chipClasses(op)"
-      @click="toggle(op.value)"
+      v-for="o in opciones"
+      :key="o.value"
+      :class="[
+        'inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors',
+        seleccionados.includes(o.value)
+          ? `bg-${color}/10 text-${color} border border-${color}/20`
+          : 'bg-base-200 text-neutral hover:bg-base-300',
+      ]"
+      @click="toggle(o.value)"
     >
-      {{ op.label }}
-      <X v-if="isSelected(op.value)" class="w-3 h-3 ml-1" />
+      {{ o.label }}
+      <X v-if="seleccionados.includes(o.value)" class="size-3" />
     </button>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
 import { X } from '@lucide/vue'
-import { injectColor, COLOR_VARIANTS } from '@/composables/useColor'
 
 const props = defineProps({
-  opciones: {
-    type: Array,
-    default: () => [],
-    // cada item: { value, label }
-  },
+  opciones: { type: Array, default: () => [] },
   seleccionados: { type: Array, default: () => [] },
-  color: {
-    type: String,
-    default: 'primary',
-    validator: (v) => COLOR_VARIANTS.includes(v),
-  },
+  color: { type: String, default: 'primary' },
 })
 
 const emit = defineEmits(['update:seleccionados'])
 
-const inheritedColor = injectColor(props.color)
-
-function isSelected(val) {
-  return props.seleccionados.includes(val)
-}
-
-function toggle(val) {
-  const next = isSelected(val)
-    ? props.seleccionados.filter((v) => v !== val)
-    : [...props.seleccionados, val]
-  emit('update:seleccionados', next)
-}
-
-function chipClasses(op) {
-  const selected = isSelected(op.value)
-  const c = inheritedColor.value
-  return [
-    'inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium transition-colors border',
-    selected
-      ? `bg-${c} text-${c}-contrast border-${c}`
-      : `bg-base-100 text-base-content border-base-300 hover:border-${c} hover:text-${c}`,
-  ]
+function toggle(value) {
+  const s = [...props.seleccionados]
+  const idx = s.indexOf(value)
+  if (idx >= 0) s.splice(idx, 1)
+  else s.push(value)
+  emit('update:seleccionados', s)
 }
 </script>

@@ -1,11 +1,11 @@
 <template>
   <div :class="avatarClasses">
     <img
-      v-if="src && !error"
+      v-if="src && !imgError"
       :src="src"
       :alt="alt"
       class="w-full h-full object-cover"
-      @error="error = true"
+      @error="imgError = true"
     />
     <span v-else class="font-medium text-current">
       {{ initials }}
@@ -15,7 +15,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { injectColor, provideColor, COLOR_VARIANTS } from '@/composables/useColor'
+import { injectColor, provideColor, resolveColor } from '@/composables/useColor'
 
 const props = defineProps({
   src: { type: String, default: '' },
@@ -24,25 +24,26 @@ const props = defineProps({
   size: {
     type: String,
     default: 'md',
-    validator: (v) => ['sm', 'md', 'lg', 'xl'].includes(v),
+    validator: (v) => ['xs', 'sm', 'md', 'lg'].includes(v),
   },
   color: {
     type: String,
     default: 'primary',
-    validator: (v) => COLOR_VARIANTS.includes(v),
   },
 })
 
-const error = ref(false)
+const imgError = ref(false)
 
-const inheritedColor = injectColor(props.color)
-provideColor(inheritedColor)
+const inherited = injectColor(props.color)
+provideColor(inherited)
+
+const c = computed(() => resolveColor(inherited.value))
 
 const sizeMap = {
-  sm: 'w-8 h-8 text-xs',
-  md: 'w-10 h-10 text-sm',
-  lg: 'w-14 h-14 text-base',
-  xl: 'w-20 h-20 text-xl',
+  xs: 'size-6 text-xs',
+  sm: 'size-8 text-xs',
+  md: 'size-10 text-sm',
+  lg: 'size-12 text-base',
 }
 
 const initials = computed(() => {
@@ -56,9 +57,7 @@ const initials = computed(() => {
 
 const avatarClasses = computed(() => [
   sizeMap[props.size],
-  'rounded-full inline-flex items-center justify-center overflow-hidden',
-  `bg-${inheritedColor.value}-100 text-${inheritedColor.value}-700`,
-  'ring-2 ring-base-100',
-  'flex-shrink-0',
+  'rounded-full inline-flex items-center justify-center overflow-hidden flex-shrink-0',
+  `bg-${c.value}/15 text-${c.value}`,
 ])
 </script>

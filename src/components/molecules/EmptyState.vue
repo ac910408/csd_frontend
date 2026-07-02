@@ -1,47 +1,36 @@
 <template>
-  <div class="flex flex-col items-center justify-center py-16 px-4 text-center">
-    <component :is="iconComponent" class="w-16 h-16 mb-4" :class="iconColor" />
-    <h3 class="text-lg font-semibold text-base-content mb-2">{{ titulo }}</h3>
-    <p v-if="descripcion" class="text-sm text-neutral max-w-md mb-6">{{ descripcion }}</p>
-    <BaseButton
+  <div class="text-center py-12 flex flex-col items-center gap-3">
+    <component :is="iconComponent" class="size-12 text-neutral/30" />
+    <p class="text-lg font-medium text-base-contrast">{{ titulo }}</p>
+    <p v-if="descripcion" class="text-sm text-neutral max-w-sm">
+      {{ descripcion }}
+    </p>
+    <button
       v-if="accion"
-      variant="primary"
-      :color="color"
-      @click="accion.callback"
+      class="mt-2 inline-flex items-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-colors"
+      @click="accion.onClick"
     >
       {{ accion.label }}
-    </BaseButton>
+    </button>
   </div>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import { FileSearch } from '@lucide/vue'
-import { injectColor, COLOR_VARIANTS } from '@/composables/useColor'
+import { FileSearch, PackageOpen, CalendarOff, ShieldAlert } from '@lucide/vue'
 
 const props = defineProps({
   titulo: { type: String, default: 'Sin resultados' },
   descripcion: { type: String, default: '' },
   icono: { type: String, default: 'file-search' },
-  accion: {
-    type: Object,
-    default: null,
-    // { label: string, callback: Function }
-  },
-  color: {
-    type: String,
-    default: 'primary',
-    validator: (v) => COLOR_VARIANTS.includes(v),
-  },
+  accion: { type: Object, default: null },
 })
 
-const inheritedColor = injectColor(props.color)
-
-const iconComponent = computed(() => {
-  // Mapa simple; se puede expandir
-  const map = { 'file-search': FileSearch }
-  return map[props.icono] || FileSearch
-})
-
-const iconColor = computed(() => `text-${inheritedColor.value}-300`)
+const icons = {
+  'file-search': FileSearch,
+  'package-open': PackageOpen,
+  'calendar-off': CalendarOff,
+  'shield-alert': ShieldAlert,
+}
+const iconComponent = computed(() => icons[props.icono] || FileSearch)
 </script>

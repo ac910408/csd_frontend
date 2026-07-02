@@ -2,7 +2,7 @@
   <BaseCard class="mb-4">
     <template #header>
       <div class="flex items-center justify-between">
-        <h3 class="text-base font-semibold">{{ title }}</h3>
+        <h3 class="text-base font-semibold text-base-contrast">{{ title }}</h3>
         <BaseSpinner v-if="cargando" size="sm" />
       </div>
     </template>

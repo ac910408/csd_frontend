@@ -1,12 +1,12 @@
 <template>
-  <div :class="cardClasses">
-    <div v-if="$slots.header" :class="headerClasses">
+  <div :class="classes">
+    <div v-if="$slots.header" class="border-b border-base-200 px-4 py-3">
       <slot name="header" />
     </div>
-    <div :class="bodyClasses">
+    <div :class="paddingMap[padding]">
       <slot />
     </div>
-    <div v-if="$slots.footer" :class="footerClasses">
+    <div v-if="$slots.footer" class="border-t border-base-200 px-4 py-3">
       <slot name="footer" />
     </div>
   </div>
@@ -14,38 +14,23 @@
 
 <script setup>
 import { computed } from 'vue'
-import { injectColor, provideColor, COLOR_VARIANTS } from '@/composables/useColor'
+import { injectColor, provideColor, resolveColor } from '@/composables/useColor'
 
 const props = defineProps({
   padding: { type: String, default: 'md' },
   hover: { type: Boolean, default: false },
-  color: {
-    type: String,
-    default: 'primary',
-    validator: (v) => COLOR_VARIANTS.includes(v),
-  },
+  color: { type: String, default: 'primary' },
 })
 
-const inheritedColor = injectColor(props.color)
-provideColor(inheritedColor)
+const inherited = injectColor(props.color)
+provideColor(inherited)
 
-const paddingMap = { none: '', sm: 'p-3', md: 'p-5', lg: 'p-8' }
+const c = computed(() => resolveColor(inherited.value))
 
-const cardClasses = computed(() => [
-  'bg-base-100 rounded-xl border border-base-200 shadow-sm',
-  props.hover ? 'hover:shadow-md hover:border-base-300 transition-shadow' : '',
-  `ring-1 ring-${inheritedColor.value}/5`,
-])
+const paddingMap = { sm: 'px-3 py-3', md: 'px-4 py-4', lg: 'px-6 py-5' }
 
-const headerClasses = computed(() => [
-  paddingMap[props.padding],
-  'border-b border-base-200 font-semibold text-base-content',
-])
-
-const bodyClasses = paddingMap[props.padding]
-
-const footerClasses = computed(() => [
-  paddingMap[props.padding],
-  'border-t border-base-200 flex justify-end gap-3',
+const classes = computed(() => [
+  'rounded-lg bg-base-100 shadow-sm border border-base-200',
+  props.hover ? 'transition-all hover:shadow-md cursor-pointer' : '',
 ])
 </script>

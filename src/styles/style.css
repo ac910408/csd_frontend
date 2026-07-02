@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
 
 @theme {
   --color-primary: var(--color-primary);
@@ -19,6 +20,7 @@
   --color-neutral-contrast: var(--color-neutral-contrast);
   --color-base-100: var(--color-base-100);
   --color-base-content: var(--color-base-content);
+  --color-base-contrast: var(--color-base-content);
   --color-base-200: var(--color-base-200);
   --color-base-300: var(--color-base-300);
   /* Identidad */
@@ -69,21 +71,18 @@
   }
 
   .dark {
-    /* Sistema Semántico: TEMA OSCURO */
-    /*--color-primary: #b885ff;
+    --color-primary: oklch(65% 0.19 306);
     --color-primary-contrast: #000000;
-    --color-secondary: #4f70b0;
+    --color-secondary: oklch(52% 0.12 268);
     --color-secondary-contrast: #ffffff;
-    --color-accent: #6ba8d1;
-    --color-accent-contrast: #000000;
-    --color-info: #ff9b54;
+    --color-info: oklch(60% 0.17 249);
     --color-info-contrast: #000000;
-    --color-success: #2e9d5e;
+    --color-success: oklch(63% 0.17 152);
     --color-success-contrast: #ffffff;
-    --color-warning: #ebc66b;
+    --color-warning: oklch(73% 0.155 88);
     --color-warning-contrast: #000000;
-    --color-error: #ff5a65;
-    --color-error-contrast: #000000;*/
+    --color-error: oklch(64% 0.23 27);
+    --color-error-contrast: #ffffff;
 
     --color-neutral: #ffffff;
     --color-neutral-contrast: #000000;
@@ -92,14 +91,14 @@
     --color-base-200: #1e1e1e;
     --color-base-300: #2a2a2a;
   }
-}
 
-body {
-  @apply bg-base-100;
-}
+  * {
+    @apply transition-colors duration-500 ease-in-out;
+  }
 
-* {
-  @apply transition-colors duration-500 ease-in-out;
+  body {
+    @apply bg-base-100;
+  }
 }
 
 @keyframes slide-up {
@@ -115,19 +114,4 @@ body {
 
 .animate-slide-up {
   animation: slide-up 0.25s ease-out;
-}
-
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.15s ease-out;
 }

@@ -1,5 +1,5 @@
 /**
- * Composable para cascada de color entre componentes.
+ * Cascada de color entre componentes.
  * Padre proporciona color vía prop, hijos heredan vía inject.
  */
 import { provide, inject, computed } from 'vue'
@@ -9,13 +9,11 @@ const COLOR_KEY = Symbol('csd-color')
 const COLOR_VARIANTS = [
   'primary',
   'secondary',
-  'accent',
   'info',
   'success',
   'warning',
   'error',
   'neutral',
-  // Colores de identidad (válidos como bg/text en componentes)
   'mundial',
   'clan',
   'comunidad',
@@ -27,21 +25,32 @@ const COLOR_VARIANTS = [
 ]
 
 /**
- * Proporciona un color hacia abajo en el árbol de componentes.
- * @param {import('vue').Ref<string>|string} color
+ * El mapa de colores de identidad → semántico (Tailwind).
+ * Los colores de identidad se mapean a su equivalente semántico para clases CSS.
  */
+const IDENTITY_TO_BASE = {
+  mundial: 'mundial',
+  clan: 'clan',
+  comunidad: 'comunidad',
+  grupo: 'grupo',
+  manada: 'manada',
+  nacional: 'nacional',
+  scouters: 'scouters',
+  tropa: 'tropa',
+}
+
 export function provideColor(color) {
   provide(COLOR_KEY, color)
 }
 
-/**
- * Obtiene el color heredado del padre, o un fallback.
- * @param {string} [fallback='primary']
- * @returns {import('vue').ComputedRef<string>}
- */
 export function injectColor(fallback = 'primary') {
   const parentColor = inject(COLOR_KEY, null)
   return computed(() => parentColor?.value ?? parentColor ?? fallback)
+}
+
+/** Retorna el valor base del color (identidad o semántico) */
+export function resolveColor(color) {
+  return IDENTITY_TO_BASE[color] || color || 'primary'
 }
 
 export { COLOR_VARIANTS }

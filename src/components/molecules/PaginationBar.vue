@@ -1,41 +1,38 @@
 <template>
-  <div v-if="totalPaginas > 1" class="flex items-center justify-between gap-4 py-3">
-    <span class="text-sm text-neutral">
-      {{ total }} resultado{{ total !== 1 ? 's' : '' }}
-    </span>
+  <div class="flex items-center justify-between gap-2">
+    <p class="text-xs text-neutral">{{ total }} resultado{{ total !== 1 ? 's' : '' }}</p>
     <div class="flex items-center gap-1">
-      <BaseButton
-        variant="ghost"
-        size="sm"
-        :color="color"
+      <button
         :disabled="pagina <= 1"
-        @click="$emit('cambiarPagina', pagina - 1)"
+        class="inline-flex size-8 items-center justify-center rounded-md border border-base-300 text-base-contrast transition-colors hover:bg-base-200 disabled:opacity-40 disabled:cursor-not-allowed"
+        @click="cambiar(pagina - 1)"
       >
-        <ChevronLeft class="w-4 h-4" />
-      </BaseButton>
+        <ChevronLeft class="size-4" />
+      </button>
 
       <template v-for="p in paginas" :key="p">
-        <span v-if="p === '...'" class="px-2 text-neutral text-sm">…</span>
-        <BaseButton
+        <span v-if="p === '...'" class="px-1 text-neutral">…</span>
+        <button
           v-else
-          :variant="p === pagina ? 'primary' : 'ghost'"
-          size="sm"
-          :color="color"
-          @click="$emit('cambiarPagina', p)"
+          :class="[
+            'inline-flex size-8 items-center justify-center rounded-md text-sm font-medium transition-colors',
+            p === pagina
+              ? 'bg-primary text-white'
+              : 'border border-base-300 text-base-contrast hover:bg-base-200',
+          ]"
+          @click="cambiar(p)"
         >
           {{ p }}
-        </BaseButton>
+        </button>
       </template>
 
-      <BaseButton
-        variant="ghost"
-        size="sm"
-        :color="color"
+      <button
         :disabled="pagina >= totalPaginas"
-        @click="$emit('cambiarPagina', pagina + 1)"
+        class="inline-flex size-8 items-center justify-center rounded-md border border-base-300 text-base-contrast transition-colors hover:bg-base-200 disabled:opacity-40 disabled:cursor-not-allowed"
+        @click="cambiar(pagina + 1)"
       >
-        <ChevronRight class="w-4 h-4" />
-      </BaseButton>
+        <ChevronRight class="size-4" />
+      </button>
     </div>
   </div>
 </template>
@@ -43,44 +40,29 @@
 <script setup>
 import { computed } from 'vue'
 import { ChevronLeft, ChevronRight } from '@lucide/vue'
-import { injectColor, COLOR_VARIANTS } from '@/composables/useColor'
 
 const props = defineProps({
   pagina: { type: Number, required: true },
   totalPaginas: { type: Number, required: true },
   total: { type: Number, default: 0 },
-  color: {
-    type: String,
-    default: 'primary',
-    validator: (v) => COLOR_VARIANTS.includes(v),
-  },
 })
 
-defineEmits(['cambiarPagina'])
-
-// eslint-disable-next-line no-unused-vars
-const inheritedColor = injectColor(props.color)
+const emit = defineEmits(['cambio'])
 
 const paginas = computed(() => {
   const p = props.pagina
-  const t = props.totalPaginas
+  const tp = props.totalPaginas
+  if (tp <= 7) return Array.from({ length: tp }, (_, i) => i + 1)
   const r = []
-
-  if (t <= 7) {
-    for (let i = 1; i <= t; i++) r.push(i)
-    return r
-  }
-
   r.push(1)
   if (p > 3) r.push('...')
-
-  const start = Math.max(2, p - 1)
-  const end = Math.min(t - 1, p + 1)
-  for (let i = start; i <= end; i++) r.push(i)
-
-  if (p < t - 2) r.push('...')
-  r.push(t)
-
+  for (let i = Math.max(2, p - 1); i <= Math.min(tp - 1, p + 1); i++) r.push(i)
+  if (p < tp - 2) r.push('...')
+  r.push(tp)
   return r
 })
+
+function cambiar(p) {
+  if (p >= 1 && p <= props.totalPaginas) emit('cambio', p)
+}
 </script>

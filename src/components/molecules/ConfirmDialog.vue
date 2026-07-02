@@ -1,36 +1,24 @@
 <template>
-  <BaseModal :open="open" :title="titulo" size="sm" :color="color" @close="$emit('cancelar')">
-    <p class="text-sm text-base-content">{{ mensaje }}</p>
-
-    <template #footer>
-      <BaseButton variant="ghost" size="sm" :color="color" @click="$emit('cancelar')">
-        {{ cancelarLabel }}
-      </BaseButton>
-      <BaseButton variant="primary" size="sm" :color="color" @click="$emit('confirmar')">
+  <BaseModal :open="open" :title="titulo" size="sm" @close="$emit('close')">
+    <p class="text-sm text-base-contrast">{{ mensaje }}</p>
+    <div class="flex justify-end gap-2 mt-4">
+      <BaseButton variant="ghost" size="sm" @click="$emit('close')">{{ cancelarLabel }}</BaseButton>
+      <BaseButton :variant="danger ? 'danger' : 'primary'" size="sm" @click="$emit('confirmar')">
         {{ confirmarLabel }}
       </BaseButton>
-    </template>
+    </div>
   </BaseModal>
 </template>
 
 <script setup>
-import { injectColor, COLOR_VARIANTS } from '@/composables/useColor'
-
 defineProps({
   open: { type: Boolean, default: false },
   titulo: { type: String, default: 'Confirmar' },
   mensaje: { type: String, default: '¿Estás seguro?' },
   confirmarLabel: { type: String, default: 'Confirmar' },
   cancelarLabel: { type: String, default: 'Cancelar' },
-  color: {
-    type: String,
-    default: 'primary',
-    validator: (v) => COLOR_VARIANTS.includes(v),
-  },
+  danger: { type: Boolean, default: false },
 })
 
-defineEmits(['confirmar', 'cancelar'])
-
-// eslint-disable-next-line no-unused-vars
-const inheritedColor = injectColor('primary')
+defineEmits(['close', 'confirmar'])
 </script>

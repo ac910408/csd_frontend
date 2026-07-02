@@ -1,5 +1,6 @@
 /**
  * Navegación del sidebar dinámica según rol activo.
+ * Padres con hijos usan type: 'trigger' sin 'to'.
  */
 import { computed } from 'vue'
 import { useAuthStore } from '@/stores/auth.store'
@@ -19,110 +20,73 @@ import {
   BarChart3,
 } from '@lucide/vue'
 
-/**
- * Items de navegación con visibilidad condicionada por rol.
- * @returns {import('vue').ComputedRef<Array>}
- */
 export function useNavigation() {
   const auth = useAuthStore()
 
   const items = computed(() => {
-    const rol = auth.rolActivo
-    const all = []
+    const nav = [
+      { label: 'Dashboard', to: '/', icon: LayoutDashboard },
+      {
+        label: 'Mi Perfil',
+        icon: User,
+        children: [
+          { label: 'Datos personales', to: '/perfil/datos' },
+          { label: 'Salud / Ficha Médica', to: '/perfil/salud' },
+        ],
+      },
+    ]
 
-    // Dashboard — todos
-    all.push({
-      label: 'Dashboard',
-      to: '/',
-      icon: LayoutDashboard,
-      visible: () => true,
-    })
+    if (auth.hasRole(ROLES.SCOUT)) {
+      nav.push({
+        label: 'Mi Progresión',
+        icon: Mountain,
+        children: [{ label: 'Acciones personales', to: '/progresion/acciones' }],
+      })
+    }
 
-    // Perfil — todos autenticados
-    all.push({
-      label: 'Mi Perfil',
-      to: '/perfil',
-      icon: User,
-      visible: () => true,
-      children: [
-        { label: 'Datos personales', to: '/perfil' },
-        { label: 'Salud / Ficha Médica', to: '/perfil/salud' },
-      ],
-    })
+    if (auth.hasAnyRole([ROLES.ADMIN, ROLES.DIRIGENTE_PROVINCIA, ROLES.DIRIGENTE, ROLES.SCOUTER])) {
+      nav.push({
+        label: 'Organización',
+        icon: Building2,
+        children: [
+          { label: 'Provincias', to: '/provincias' },
+          { label: 'Grupos', to: '/grupos' },
+          { label: 'Secciones', to: '/secciones' },
+        ],
+      })
+    }
 
-    // Progresión — scout
-    all.push({
-      label: 'Mi Progresión',
-      to: '/progresion',
-      icon: Mountain,
-      visible: () => auth.hasRole(ROLES.SCOUT),
-      children: [{ label: 'Acciones personales', to: '/progresion/acciones' }],
-    })
+    if (auth.hasAnyRole([ROLES.ADMIN, ROLES.DIRIGENTE, ROLES.SCOUTER])) {
+      nav.push({
+        label: 'Finanzas',
+        icon: DollarSign,
+        children: [{ label: 'Transacciones', to: '/transacciones' }],
+      })
+    }
 
-    // Organización — admin, dirigente_provincia, dirigente
-    all.push({
-      label: 'Organización',
-      to: '/provincias',
-      icon: Building2,
-      visible: () => auth.hasAnyRole([ROLES.ADMIN, ROLES.DIRIGENTE_PROVINCIA, ROLES.DIRIGENTE]),
-      children: [
-        { label: 'Provincias', to: '/provincias' },
-        { label: 'Grupos', to: '/grupos' },
-        { label: 'Secciones', to: '/secciones' },
-      ],
-    })
+    if (auth.hasRole(ROLES.ADMIN)) {
+      nav.push({
+        label: 'Admin',
+        icon: Users,
+        children: [
+          { label: 'Usuarios y roles', to: '/admin/usuarios' },
+          { label: 'Sugerencias', to: '/admin/sugerencias' },
+        ],
+      })
+    }
 
-    // Operación — admin, scouter
-    all.push({
-      label: 'Operación',
-      to: '/secciones',
-      icon: Calendar,
-      visible: () => auth.hasAnyRole([ROLES.ADMIN, ROLES.SCOUTER]),
-      children: [
-        { label: 'Ciclos', to: '/secciones' },
-        { label: 'Programas', to: '/secciones' },
-        { label: 'Actas de Consejo', to: '/secciones' },
-        { label: 'Protocolos', to: '/secciones' },
-      ],
-    })
+    if (auth.hasAnyRole([ROLES.SCOUTER, ROLES.DIRIGENTE])) {
+      nav.push({
+        label: 'Reportes',
+        icon: BarChart3,
+        children: [
+          { label: 'Mensual planeado vs real', to: '/reportes/mensual' },
+          { label: 'Mensual completo', to: '/reportes/mensual-completo' },
+        ],
+      })
+    }
 
-    // Finanzas — admin, dirigente, scouter
-    all.push({
-      label: 'Finanzas',
-      to: '/transacciones',
-      icon: DollarSign,
-      visible: () => auth.hasAnyRole([ROLES.ADMIN, ROLES.DIRIGENTE, ROLES.SCOUTER]),
-      children: [
-        { label: 'Transacciones', to: '/transacciones' },
-        { label: 'Inventario', to: '/secciones' },
-      ],
-    })
-
-    // Admin — solo admin
-    all.push({
-      label: 'Admin',
-      to: '/admin/usuarios',
-      icon: Users,
-      visible: () => auth.hasRole(ROLES.ADMIN),
-      children: [
-        { label: 'Usuarios y roles', to: '/admin/usuarios' },
-        { label: 'Sugerencias', to: '/admin/sugerencias' },
-      ],
-    })
-
-    // Reportes — scouter, dirigente
-    all.push({
-      label: 'Reportes',
-      to: '/reportes/mensual',
-      icon: BarChart3,
-      visible: () => auth.hasAnyRole([ROLES.SCOUTER, ROLES.DIRIGENTE]),
-      children: [
-        { label: 'Mensual planeado vs real', to: '/reportes/mensual' },
-        { label: 'Mensual completo', to: '/reportes/mensual-completo' },
-      ],
-    })
-
-    return all.filter((item) => item.visible())
+    return nav
   })
 
   return { items }

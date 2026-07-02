@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-base-100 flex">
+  <div class="min-h-screen bg-base-100 text-base-content flex">
     <AppSidebar />
 
     <div class="flex-1 flex flex-col min-w-0">
@@ -11,44 +11,21 @@
 
       <!-- Toasts -->
       <div class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-sm">
-        <div
+        <AlertMessage
           v-for="t in ui.toasts.value"
           :key="t.id"
-          :class="toastClasses(t.type)"
-          class="px-4 py-3 rounded-lg shadow-lg text-sm flex items-center gap-2 animate-slide-up"
-          role="alert"
-        >
-          <CircleCheck v-if="t.type === 'success'" class="w-4 h-4 flex-shrink-0" />
-          <TriangleAlert v-else-if="t.type === 'warning'" class="w-4 h-4 flex-shrink-0" />
-          <CircleAlert v-else-if="t.type === 'error'" class="w-4 h-4 flex-shrink-0" />
-          <Info v-else class="w-4 h-4 flex-shrink-0" />
-          <span>{{ t.mensaje }}</span>
-          <button
-            class="ml-auto p-0.5 rounded hover:bg-black/10"
-            @click="ui.removeToast(t.id)"
-            aria-label="Cerrar"
-          >
-            <X class="w-3 h-3" />
-          </button>
-        </div>
+          :type="t.type"
+          :mensaje="t.mensaje"
+          cerrable
+          @cerrar="ui.removeToast(t.id)"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { CircleCheck, TriangleAlert, CircleAlert, Info, X } from '@lucide/vue'
 import { useUiStore } from '@/stores/ui.store'
 
 const ui = useUiStore()
-
-function toastClasses(type) {
-  const map = {
-    success: 'bg-success text-success-contrast',
-    error: 'bg-error text-error-contrast',
-    warning: 'bg-warning text-warning-contrast',
-    info: 'bg-info text-info-contrast',
-  }
-  return map[type] || map.info
-}
 </script>
